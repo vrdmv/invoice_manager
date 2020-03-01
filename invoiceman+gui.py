@@ -2,6 +2,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+from Palette_class import dark_palette
+from create_workenv import *
 import sys
 import shutil
 import send2trash
@@ -57,7 +59,6 @@ class Ui_MainWindow(QWidget):
 
         self.dirModel = QtWidgets.QFileSystemModel()
         self.dirModel.setRootPath(QtCore.QDir.rootPath())
-        # self.dirModel.setFilter(QtCore.QDir.NoDotAndDotDot | QtCore.QDir.AllDirs)
         self.dirModel.setReadOnly(False)
 
         self.listView.setModel(self.dirModel)
@@ -65,7 +66,6 @@ class Ui_MainWindow(QWidget):
 
         # TreeView model characteristics & functionality
         self.fileModel = QtWidgets.QFileSystemModel()
-        # self.fileModel.setFilter(QtCore.QDir.NoDotAndDotDot | QtCore.QDir.Files)
         self.fileModel.setReadOnly(False)
         
         self.treeView = QtWidgets.QTreeView(self.frame)
@@ -101,7 +101,7 @@ class Ui_MainWindow(QWidget):
         self.radioButton_5.setGeometry(QtCore.QRect(930, 60, 95, 20))
         self.radioButton_5.setObjectName("Overdue")
 
-        # Status bar characteristis
+        # Progress bar characteristi
         self.progressBar = QtWidgets.QProgressBar(self.frame)
         self.progressBar.setGeometry(QtCore.QRect(270, 670, 801, 23))
         self.progressBar.setToolTip("Invoice status")
@@ -148,7 +148,7 @@ class Ui_MainWindow(QWidget):
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -196,8 +196,8 @@ class Ui_MainWindow(QWidget):
         """Move selected file to archive"""
         source = self.fileModel.fileInfo(index).absoluteFilePath()
         destination = create_archive()
-        #file_name = self.fileModel.fileName(index)
-        #file_info = self.fileModel.fileInfo(index)
+        # file_name = self.fileModel.fileName(index)
+        # file_info = self.fileModel.fileInfo(index)
         shutil.move(os.path.abspath(source), os.path.abspath(destination))
 
 
@@ -225,7 +225,6 @@ class Ui_MainWindow(QWidget):
         delete_action = menu.addAction("Send to trashbin")
         archive_action = menu.addAction("Move to archive")
         action = menu.exec_(self.treeView.viewport().mapToGlobal(position))
-
         try:
             if action == delete_action:
                 self.dlt(index)
@@ -235,7 +234,6 @@ class Ui_MainWindow(QWidget):
                 self.copy(index)
             if action == archive_action:
                 self.move_to_archive(index)
-
         except PermissionError:
             print("Nope, can't do that!")
 
@@ -252,8 +250,10 @@ class Ui_MainWindow(QWidget):
             invoice_name = text
             invoice = docx.Document()
             invoice.add_paragraph('Invoice Report', 'Title')
-            paraobj1 = invoice.add_paragraph('This is the second paragraph.')
-            paraobj2 = invoice.add_paragraph('This is yet another paragraph.')
+            paraobj1 = invoice.add_paragraph(
+                'This is the second paragraph.')
+            paraobj2 = invoice.add_paragraph(
+                'This is yet another paragraph.')
             paraobj1.add_run('This text is being added to '
                              'the second paragraph.')
             os.chdir(working_directory)
@@ -273,7 +273,6 @@ class Ui_MainWindow(QWidget):
                 project_name = text
                 project_dir = os.path.join("C:\\", "Invoice Manager",
                                            f"{project_name}")
-
                 if not os.path.exists(project_dir):
                     os.makedirs(project_dir)
                     active = False
@@ -281,60 +280,15 @@ class Ui_MainWindow(QWidget):
                 active = False
 
 
-
-def create_workdir():
-    """Create a current working directory.
-    (works across all operating systems)"""
-
-    work_dir = os.path.join("C:\\", "Invoice Manager",
-                            "Work environment")
-    if not os.path.exists(work_dir):
-        os.makedirs(work_dir)
-    work_dir_str = str(work_dir)
-    return work_dir_str
-
-
 create_workdir()
-
-
-def create_archive():
-    """Create a current working directory.
-    (works across all operating systems)"""
-
-    archive_dir = os.path.join("C:\\", "Invoice Manager",
-                               "Archive")
-    if not os.path.exists(archive_dir):
-        os.makedirs(archive_dir)
-    archive_dir_str = str(archive_dir)
-    return archive_dir_str
-
-
 create_archive()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
     app.setStyle('Fusion')
-    dark_palette = QPalette()
-    dark_palette.setColor(QPalette.Window, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.WindowText, Qt.white)
-    dark_palette.setColor(QPalette.Base, QColor(25, 25, 25))
-    dark_palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ToolTipBase, Qt.white)
-    dark_palette.setColor(QPalette.ToolTipText, Qt.white)
-    dark_palette.setColor(QPalette.Text, Qt.white)
-    dark_palette.setColor(QPalette.Button, QColor(53, 53, 53))
-    dark_palette.setColor(QPalette.ButtonText, Qt.white)
-    dark_palette.setColor(QPalette.BrightText, Qt.red)
-    dark_palette.setColor(QPalette.Link, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-    dark_palette.setColor(QPalette.HighlightedText, Qt.black)
     qApp.setPalette(dark_palette)
-    qApp.setStyleSheet(
-        "QToolTip { color: #ffffff; background-color: #2a82da;"
+    qApp.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da;"
         " border: 1px solid white; }")
-
     MainWindow = QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)

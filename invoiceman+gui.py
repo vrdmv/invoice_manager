@@ -10,7 +10,7 @@ import docx
 
 class Ui_MainWindow(QWidget):
     def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
+        MainWindow.setObjectName("Invoice Manager")
         MainWindow.resize(1120, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -152,7 +152,7 @@ class Ui_MainWindow(QWidget):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("Invoice Manager", "Invoice Manager"))
         self.project_button.setText(_translate("MainWindow", "+ New Project"))
         self.project_button.setShortcut(_translate("MainWindow", "Ctrl+P"))
         self.project_button.setToolTip("Shortcut: Ctrl+P")
@@ -241,12 +241,12 @@ class Ui_MainWindow(QWidget):
 
 
     def make_invoice(self):
-        """Prompt the user to specify a name for the invoice,  create the invoice
+        """Prompt the user to specify a name for the invoice, create the invoice
         and save in the working directory."""
         working_directory = create_workdir()
-        inv_inputbox = QInputDialog
+        inv_inputbox = QInputDialog()
         text, ok = inv_inputbox.getText(self, "Invoice name",
-                                        "Please enter invoice name: ",
+                                        "Please enter invoice name:                       ",
                                         QLineEdit.Normal)
         if ok and text != '':
             invoice_name = text
@@ -266,8 +266,8 @@ class Ui_MainWindow(QWidget):
         """Create a new project folder."""
         active = True
         while active:
-            text, ok = QInputDialog.getText(self, "QInputDialog.getText",
-                                            "Please enter project name: ",
+            text, ok = QInputDialog.getText(self, "Project name",
+                                            "Please enter project name:                    ",
                                             QLineEdit.Normal)
             if ok and text != '':
                 project_name = text
@@ -278,7 +278,7 @@ class Ui_MainWindow(QWidget):
                     os.makedirs(project_dir)
                     active = False
             else:
-                continue
+                active = False
 
 
 

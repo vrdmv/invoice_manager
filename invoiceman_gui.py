@@ -2,7 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-
+from Progressbar_class import ProgressBar
+from Label_class import Label
+from Button_class import Button
+from View_class import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -12,38 +15,18 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
 
         # New Project button characteristics
-        self.project_button = QtWidgets.QPushButton(self.centralwidget)
+        self.project_button = Button(self.centralwidget)
         self.project_button.setGeometry(QtCore.QRect(10, 80, 121, 41))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        self.project_button.setFont(font)
         self.project_button.setObjectName("project_button")
 
         # New Invoice button characteristics
-        self.invoice_button = QtWidgets.QPushButton(self.centralwidget)
+        self.invoice_button = Button(self.centralwidget)
         self.invoice_button.setGeometry(QtCore.QRect(10, 20, 121, 41))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(9)
-        self.invoice_button.setFont(font)
         self.invoice_button.setObjectName("invoice_button")
 
         # ListView model characteristics & functionality
-        self.listView = QtWidgets.QListView(self.centralwidget)
-        self.listView.setGeometry(QtCore.QRect(10, 190, 221, 471))
-        self.listView.setAlternatingRowColors(True)
-        self.listView.setAcceptDrops(True)
-        self.listView.setDropIndicatorShown(True)
-        self.listView.setDragEnabled(True)
-        self.listView.setSelectionMode(QAbstractItemView.SingleSelection)
-        self.listView.setMovement(QListView.Snap)
-        self.listView.setDefaultDropAction(Qt.MoveAction)
-        self.listView.setObjectName("listView")
-        self.listView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
+        self.listView = ListView(self.centralwidget)
         path = r"C:\Invoice Manager"
-
         self.dirModel = QtWidgets.QFileSystemModel()
         self.dirModel.setRootPath(QtCore.QDir.rootPath())
         self.dirModel.setReadOnly(False)
@@ -53,21 +36,11 @@ class Ui_MainWindow(object):
         # TreeView model characteristics & functionality
         self.fileModel = QtWidgets.QFileSystemModel()
         self.fileModel.setReadOnly(False)
-        self.treeView = QtWidgets.QTreeView(self.centralwidget)
+        self.treeView = TreeView(self.centralwidget)
         self.treeView.setModel(self.fileModel)
         self.treeView.setRootIndex(self.fileModel.index(path))
-        self.treeView.setDragEnabled(True)
-        self.treeView.setAcceptDrops(True)
-        self.treeView.setDropIndicatorShown(True)
-        self.treeView.setSortingEnabled(True)
-        self.treeView.setColumnWidth(0, 400)
         self.treeView.setColumnHidden(1, True)
-        self.treeView.setGeometry(QtCore.QRect(270, 90, 801, 571))
-        self.treeView.setObjectName("treeView")
-        self.treeView.setSelectionMode(QAbstractItemView.ContiguousSelection)
-        self.treeView.setDefaultDropAction(Qt.MoveAction)
-        self.treeView.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.treeView.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.treeView.setColumnWidth(0, 300)
 
         # Radio button characterisics
         self.radioButton = QtWidgets.QRadioButton(self.centralwidget)
@@ -77,39 +50,24 @@ class Ui_MainWindow(object):
         self.radioButton_2.setGeometry(QtCore.QRect(570, 60, 95, 20))
         self.radioButton_2.setObjectName("Approved")
         self.radioButton_3 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_3.setGeometry(QtCore.QRect(690, 60, 95, 20))
+        self.radioButton_3.setGeometry(QtCore.QRect(700, 60, 95, 20))
         self.radioButton_3.setObjectName("Dispatched")
         self.radioButton_4 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_4.setGeometry(QtCore.QRect(810, 60, 95, 20))
+        self.radioButton_4.setGeometry(QtCore.QRect(830, 60, 95, 20))
         self.radioButton_4.setObjectName("Paid")
         self.radioButton_5 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_5.setGeometry(QtCore.QRect(930, 60, 95, 20))
+        self.radioButton_5.setGeometry(QtCore.QRect(920, 60, 95, 20))
         self.radioButton_5.setObjectName("Overdue")
 
-        # Progress bar characteristics
-        self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-        self.progressBar.setGeometry(QtCore.QRect(270, 670, 801, 23))
-        self.progressBar.setToolTip("Invoice status")
-        self.progressBar.setAutoFillBackground(False)
-        self.progressBar.setStyleSheet("")
-        self.progressBar.setMaximum(100)
-        self.progressBar.setTextVisible(False)
-        self.progressBar.setObjectName("progressBar")
+        # Progress bar
+        self.progressBar = ProgressBar(self.centralwidget)
 
         # Labels
-        self.project_label = QtWidgets.QLabel(self.centralwidget)
+        self.project_label = Label(self.centralwidget)
         self.project_label.setGeometry(QtCore.QRect(90, 160, 61, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        self.project_label.setFont(font)
         self.project_label.setObjectName("project_label")
-        self.invoice_label = QtWidgets.QLabel(self.centralwidget)
+        self.invoice_label = Label(self.centralwidget)
         self.invoice_label.setGeometry(QtCore.QRect(270, 60, 81, 21))
-        font = QtGui.QFont()
-        font.setFamily("Arial")
-        font.setPointSize(10)
-        self.invoice_label.setFont(font)
         self.invoice_label.setObjectName("invoice_label")
 
         # MainWindow characteristics

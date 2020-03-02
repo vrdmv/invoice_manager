@@ -4,3 +4,4 @@ and track their ongoing status. The user can also move, copy, archive and delete
 projects to be created as well, so the user can properly organize their files. 
 Further functionality that will be added to the program includes - tab with a pie chart visualizing the status of all invoices, 
 tab to display exchange rates (api) and others.    
+In order to use the program, the user has to run invoiceman_main.py. 

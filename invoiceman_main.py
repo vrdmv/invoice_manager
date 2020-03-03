@@ -1,14 +1,15 @@
 from PyQt5.QtWidgets import *
 from invoiceman_gui import Ui_MainWindow
 from Palette_class import dark_palette
+from Inv_class import Invoice
 from create_workenv import *
 import sys
 import shutil
 import send2trash
 import os
-import docx
 
-class Logic(QMainWindow, Ui_MainWindow):
+
+class Logic(QMainWindow, Ui_MainWindow, Invoice):
     def __init__(self):
         super(Logic, self).__init__()
 
@@ -29,7 +30,7 @@ class Logic(QMainWindow, Ui_MainWindow):
         self.treeView.doubleClicked.connect(self.on_dblclick)
 
         # Open context menu when item clicked in treeView.
-        self.treeView.customContextMenuRequested.connect(self.openMenu)
+        self.treeView.customContextMenuRequested.connect(self.openmenu)
 
         # Update progress bar based on radio button toggled
         self.radioButton.toggled['bool'].connect(
@@ -50,13 +51,11 @@ class Logic(QMainWindow, Ui_MainWindow):
         path = self.dirModel.fileInfo(index).absoluteFilePath()
         self.treeView.setRootIndex(self.fileModel.setRootPath(path))
 
-
     def on_dblclick(self, index):
         """ Open file upon double-click."""
         path = self.fileModel.fileInfo(index).absoluteFilePath()
         path_str = str(path)
         os.startfile(path_str)
-
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""
@@ -64,7 +63,6 @@ class Logic(QMainWindow, Ui_MainWindow):
         # file_name = self.fileModel.fileName(index)
         # file_name_str = str(file_name)
         send2trash.send2trash(os.path.abspath(path))
-
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
@@ -74,7 +72,6 @@ class Logic(QMainWindow, Ui_MainWindow):
         # file_info = self.fileModel.fileInfo(index)
         shutil.move(os.path.abspath(source), os.path.abspath(destination))
 
-
     def copy(self, index):
         """Copy the selected file within the same directory."""
         source = self.fileModel.fileInfo(index).absoluteFilePath()
@@ -83,12 +80,12 @@ class Logic(QMainWindow, Ui_MainWindow):
         destination_str = str(destination)
         destination_firstfew = destination_str[:-5]
         destintion_final4 = destination_str[-5:]
-        final_destination = destination_firstfew + f"{copy_str}" + destintion_final4
+        final_destination = destination_firstfew + f"{copy_str}" + \
+            destintion_final4
         shutil.copy(os.path.abspath(source),
                     os.path.abspath(final_destination))
 
-
-    def openMenu(self, position):
+    def openmenu(self, position):
         """Setup a context menu, containing various options, to open upon right
         click."""
         index = self.treeView.indexAt(position)
@@ -112,31 +109,6 @@ class Logic(QMainWindow, Ui_MainWindow):
         except PermissionError:
             print("Nope, can't do that!")
 
-
-    def make_invoice(self):
-        """Prompt the user to specify a name for the invoice, create the invoice
-        and save in the working directory."""
-        working_directory = create_workdir()
-        inv_inputbox = QInputDialog()
-        text, ok = inv_inputbox.getText(self, "Invoice name",
-                                        "Please enter invoice name:                       ",
-                                        QLineEdit.Normal)
-        if ok and text != '':
-            invoice_name = text
-            invoice = docx.Document()
-            invoice.add_paragraph('Invoice Report', 'Title')
-            paraobj1 = invoice.add_paragraph(
-                'This is the second paragraph.')
-            paraobj2 = invoice.add_paragraph(
-                'This is yet another paragraph.')
-            paraobj1.add_run('This text is being added to '
-                             'the second paragraph.')
-            os.chdir(working_directory)
-            invoice.save(f"{invoice_name}" + ".docx")
-        else:
-            pass
-
-
     def make_project(self):
         """Create a new project folder."""
         active = True
@@ -154,6 +126,7 @@ class Logic(QMainWindow, Ui_MainWindow):
             else:
                 active = False
 
+
 create_workdir()
 create_archive()
 
@@ -162,7 +135,7 @@ if __name__ == "__main__":
     app.setStyle('Fusion')
     qApp.setPalette(dark_palette)
     qApp.setStyleSheet("QToolTip { color: #ffffff; background-color: #2a82da;"
-        " border: 1px solid white; }")
+                       " border: 1px solid white; }")
     logic = Logic()
     logic.show()
     sys.exit(app.exec_())

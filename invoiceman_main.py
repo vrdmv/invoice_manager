@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from invoiceman_gui import Ui_MainWindow
 from Palette_class import dark_palette
-from Inv_class import Invoice
+from Invoice_class import Invoice
 from create_workenv import *
 import sys
 import shutil

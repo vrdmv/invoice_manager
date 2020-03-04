@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import *
 from invoiceman_gui import Ui_MainWindow
 from Palette_class import dark_palette
 from Invoice_class import Invoice
-from create_workenv import *
+from workenv import *
 import sys
 import shutil
 import send2trash
@@ -125,7 +125,6 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
                     active = False
             else:
                 active = False
-
 
 create_workdir()
 create_archive()

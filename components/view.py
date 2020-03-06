@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import *
 
 class TreeView(QtWidgets.QTreeView):
     def __init__(self, parent=None):
-        super(TreeView, self).__init__(parent)
+        super().__init__(parent)
         self.setDragEnabled(True)
         self.setAcceptDrops(True)
         self.setDropIndicatorShown(True)
@@ -21,7 +21,7 @@ class TreeView(QtWidgets.QTreeView):
 
 class ListView(QtWidgets.QListView):
     def __init__(self, parent=None):
-        super(ListView, self).__init__(parent)
+        super().__init__(parent)
         self.setGeometry(QtCore.QRect(10, 190, 221, 471))
         self.setAlternatingRowColors(True)
         self.setAcceptDrops(True)

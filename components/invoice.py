@@ -2,13 +2,13 @@ from PyQt5.QtWidgets import *
 from workenv import create_workdir
 from docx import Document
 import os
-# import database
 
 class Invoice(QInputDialog):
     """This class represents an invoice, containing its specific attributes
      and the methods that apply to it"""
+
     def __init__(self, parent=None):
-        super(Invoice, self).__init__(parent)
+        super().__init__(parent)
         self.doc = Document()
 
     def make_invoice(self):

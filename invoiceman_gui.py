@@ -2,10 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from Progressbar_class import ProgressBar
-from Label_class import Label
-from Button_class import Button
-from View_class import *
+from components.progressbar import ProgressBar
+from components.label import Label
+from components.button import Button, RadioButton
+from components.view import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -13,16 +13,6 @@ class Ui_MainWindow(object):
         MainWindow.resize(1120, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-
-        # New Project button characteristics
-        self.project_button = Button(self.centralwidget)
-        self.project_button.setGeometry(QtCore.QRect(10, 80, 121, 41))
-        self.project_button.setObjectName("project_button")
-
-        # New Invoice button characteristics
-        self.invoice_button = Button(self.centralwidget)
-        self.invoice_button.setGeometry(QtCore.QRect(10, 20, 121, 41))
-        self.invoice_button.setObjectName("invoice_button")
 
         # ListView model characteristics & functionality
         self.listView = ListView(self.centralwidget)
@@ -42,33 +32,23 @@ class Ui_MainWindow(object):
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
 
-        # Radio button characterisics
-        self.radioButton = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton.setGeometry(QtCore.QRect(460, 60, 95, 20))
-        self.radioButton.setObjectName("Draft")
-        self.radioButton_2 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_2.setGeometry(QtCore.QRect(570, 60, 95, 20))
-        self.radioButton_2.setObjectName("Approved")
-        self.radioButton_3 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_3.setGeometry(QtCore.QRect(700, 60, 95, 20))
-        self.radioButton_3.setObjectName("Dispatched")
-        self.radioButton_4 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_4.setGeometry(QtCore.QRect(830, 60, 95, 20))
-        self.radioButton_4.setObjectName("Paid")
-        self.radioButton_5 = QtWidgets.QRadioButton(self.centralwidget)
-        self.radioButton_5.setGeometry(QtCore.QRect(920, 60, 95, 20))
-        self.radioButton_5.setObjectName("Overdue")
+        # New Project & Invoice buttons
+        self.project_button = Button("project_button", (10, 80, 121, 41), self.centralwidget)
+        self.invoice_button = Button("invoice_button", (10, 20, 121, 41), self.centralwidget)
+
+        # Radio buttons
+        self.radioButton = RadioButton("Draft", (460, 60, 95, 20), (self.centralwidget))
+        self.radioButton_2 = RadioButton("Approved", (570, 60, 95, 20), (self.centralwidget))
+        self.radioButton_3 = RadioButton("Dispatched", (700, 60, 95, 20), (self.centralwidget))
+        self.radioButton_4 = RadioButton("Paid", (830, 60, 95, 20), (self.centralwidget))
+        self.radioButton_5 = RadioButton("Overdue", (920, 60, 95, 20), (self.centralwidget))
 
         # Progress bar
         self.progressBar = ProgressBar(self.centralwidget)
 
         # Labels
-        self.project_label = Label(self.centralwidget)
-        self.project_label.setGeometry(QtCore.QRect(90, 160, 61, 21))
-        self.project_label.setObjectName("project_label")
-        self.invoice_label = Label(self.centralwidget)
-        self.invoice_label.setGeometry(QtCore.QRect(270, 60, 81, 21))
-        self.invoice_label.setObjectName("invoice_label")
+        self.project_label = Label("project_label", (90, 160, 61, 21), self.centralwidget)
+        self.invoice_label = Label("invoice_label", (270, 60, 81, 21), self.centralwidget)
 
         # MainWindow characteristics
         MainWindow.setCentralWidget(self.centralwidget)

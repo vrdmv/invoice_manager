@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from invoiceman_gui import Ui_MainWindow
-from Palette_class import dark_palette
-from Invoice_class import Invoice
+from components.palette import dark_palette
+from components.invoice import Invoice
 from workenv import *
 import sys
 import shutil
@@ -12,6 +13,13 @@ import os
 class Logic(QMainWindow, Ui_MainWindow, Invoice):
     def __init__(self):
         super(Logic, self).__init__()
+
+        #variable(lastclicked) = None
+        #on_click --> path from on click
+
+        #when radio button clicked --> function (on radio button click)
+        #takes variable (which is now abs file path)
+
 
         # Set up the user interface
         self.setupUi(self)
@@ -44,6 +52,13 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         self.radioButton_5.toggled['bool'].connect(
             lambda: self.progressBar.setValue(100))
 
+    # def get_names(self):
+    #     """Set invoice status"""
+    #     model = self.fileModel
+    #     path = model.rootDirectory()
+    #     folder = QDir.entryList(path)
+    #     print(folder)
+
     # Program Functions
     def on_click(self, index):
         """When a directory is selected in the list view, show all of its files
@@ -60,16 +75,12 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""
         path = self.fileModel.fileInfo(index).absoluteFilePath()
-        # file_name = self.fileModel.fileName(index)
-        # file_name_str = str(file_name)
         send2trash.send2trash(os.path.abspath(path))
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
         source = self.fileModel.fileInfo(index).absoluteFilePath()
         destination = create_archive()
-        # file_name = self.fileModel.fileName(index)
-        # file_info = self.fileModel.fileInfo(index)
         shutil.move(os.path.abspath(source), os.path.abspath(destination))
 
     def copy(self, index):

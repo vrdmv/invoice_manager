@@ -12,14 +12,7 @@ import os
 
 class Logic(QMainWindow, Ui_MainWindow, Invoice):
     def __init__(self):
-        super(Logic, self).__init__()
-
-        #variable(lastclicked) = None
-        #on_click --> path from on click
-
-        #when radio button clicked --> function (on radio button click)
-        #takes variable (which is now abs file path)
-
+        super().__init__()
 
         # Set up the user interface
         self.setupUi(self)
@@ -33,6 +26,9 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         # When folder in listView is clicked, the items stored in it are
         # displayed in the treeview.
         self.listView.clicked.connect(self.on_click)
+
+        # Prints / returns the name of the file which was clicked last
+        self.treeView.clicked.connect(self.last_clicked)
 
         # Open item in treeview when double-clicked
         self.treeView.doubleClicked.connect(self.on_dblclick)
@@ -52,13 +48,6 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         self.radioButton_5.toggled['bool'].connect(
             lambda: self.progressBar.setValue(100))
 
-    # def get_names(self):
-    #     """Set invoice status"""
-    #     model = self.fileModel
-    #     path = model.rootDirectory()
-    #     folder = QDir.entryList(path)
-    #     print(folder)
-
     # Program Functions
     def on_click(self, index):
         """When a directory is selected in the list view, show all of its files
@@ -71,6 +60,11 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         path = self.fileModel.fileInfo(index).absoluteFilePath()
         path_str = str(path)
         os.startfile(path_str)
+
+    def last_clicked(self, index):
+        """Get the name of the file which was clicked last"""
+        file_name = self.fileModel.fileName(index)
+        print(file_name[:-5])
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""

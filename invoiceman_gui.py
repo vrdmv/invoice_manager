@@ -32,25 +32,19 @@ class Ui_MainWindow(object):
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
 
-        # New Project & Invoice buttons
         self.project_button = Button("project_button", (10, 80, 121, 41), self.centralwidget)
         self.invoice_button = Button("invoice_button", (10, 20, 121, 41), self.centralwidget)
-
-        # Radio buttons
         self.radioButton = RadioButton("Draft", (460, 60, 95, 20), (self.centralwidget))
         self.radioButton_2 = RadioButton("Approved", (570, 60, 95, 20), (self.centralwidget))
         self.radioButton_3 = RadioButton("Dispatched", (700, 60, 95, 20), (self.centralwidget))
         self.radioButton_4 = RadioButton("Paid", (830, 60, 95, 20), (self.centralwidget))
         self.radioButton_5 = RadioButton("Overdue", (920, 60, 95, 20), (self.centralwidget))
 
-        # Progress bar
         self.progressBar = ProgressBar(self.centralwidget)
 
-        # Labels
         self.project_label = Label("project_label", (90, 160, 61, 21), self.centralwidget)
         self.invoice_label = Label("invoice_label", (270, 60, 81, 21), self.centralwidget)
 
-        # MainWindow characteristics
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -72,4 +66,3 @@ class Ui_MainWindow(object):
         self.radioButton_3.setText(_translate("MainWindow", "Dispatched"))
         self.radioButton_4.setText(_translate("MainWindow", "Paid"))
         self.radioButton_5.setText(_translate("MainWindow", "Overdue"))
-

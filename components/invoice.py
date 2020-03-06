@@ -2,6 +2,11 @@ from PyQt5.QtWidgets import *
 from workenv import create_workdir
 from docx import Document
 import os
+from pymongo import MongoClient
+
+cluster = MongoClient("mongodb+srv://dimovik:azviki123@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
+database = cluster["invoiceman"]
+collection = database["invoice_status"]
 
 class Invoice(QInputDialog):
     """This class represents an invoice, containing its specific attributes
@@ -24,7 +29,11 @@ class Invoice(QInputDialog):
             paragraph.add_run("\nLorem ipsum")
             os.chdir(work_dir)
             self.doc.save(f"{self.name}" + ".docx")
-            # update/insert in MongoDB
+            self.set_status()
         else:
             pass
 
+    def set_status(self):
+        """Set the invoice's status"""
+        post = {"invoice_name": f"{self.name}", "status": "Draft"}
+        collection.insert_one(post)

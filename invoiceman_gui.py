@@ -7,7 +7,10 @@ from components.label import Label
 from components.button import Button, RadioButton
 from components.view import *
 
-class Ui_MainWindow(object):
+
+class UiMainWindow(object):
+    """The UIMainWindow class sets up the program's graphical user interface
+    and its underlying functions"""
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("Invoice Manager")
         MainWindow.resize(1120, 800)
@@ -32,6 +35,7 @@ class Ui_MainWindow(object):
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
 
+        # Graphical components
         self.project_button = Button("project_button", (10, 80, 121, 41), self.centralwidget)
         self.invoice_button = Button("invoice_button", (10, 20, 121, 41), self.centralwidget)
         self.radioButton = RadioButton("Draft", (460, 60, 95, 20), (self.centralwidget))
@@ -39,9 +43,7 @@ class Ui_MainWindow(object):
         self.radioButton_3 = RadioButton("Dispatched", (700, 60, 95, 20), (self.centralwidget))
         self.radioButton_4 = RadioButton("Paid", (830, 60, 95, 20), (self.centralwidget))
         self.radioButton_5 = RadioButton("Overdue", (920, 60, 95, 20), (self.centralwidget))
-
         self.progressBar = ProgressBar(self.centralwidget)
-
         self.project_label = Label("project_label", (90, 160, 61, 21), self.centralwidget)
         self.invoice_label = Label("invoice_label", (270, 60, 81, 21), self.centralwidget)
 

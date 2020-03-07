@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from invoiceman_gui import Ui_MainWindow
+from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
-from components.invoice import Invoice
+from components.invoice import Invoice, collection
 from workenv import *
 import sys
 import shutil
@@ -10,7 +10,8 @@ import send2trash
 import os
 
 
-class Logic(QMainWindow, Ui_MainWindow, Invoice):
+class Logic(QMainWindow, UiMainWindow, Invoice):
+    """The Logic class contains all of the program's functions"""
     def __init__(self):
         super().__init__()
 
@@ -28,7 +29,7 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         self.listView.clicked.connect(self.on_click)
 
         # Prints / returns the name of the file which was clicked last
-        self.treeView.clicked.connect(self.last_clicked)
+        self.treeView.clicked.connect(self.process_status)
 
         # Open item in treeview when double-clicked
         self.treeView.doubleClicked.connect(self.on_dblclick)
@@ -37,16 +38,11 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         self.treeView.customContextMenuRequested.connect(self.openmenu)
 
         # Update progress bar based on radio button toggled
-        self.radioButton.toggled['bool'].connect(
-            lambda: self.progressBar.setValue(20))
-        self.radioButton_2.toggled['bool'].connect(
-            lambda: self.progressBar.setValue(40))
-        self.radioButton_3.toggled['bool'].connect(
-            lambda: self.progressBar.setValue(60))
-        self.radioButton_4.toggled['bool'].connect(
-            lambda: self.progressBar.setValue(80))
-        self.radioButton_5.toggled['bool'].connect(
-            lambda: self.progressBar.setValue(100))
+        self.radioButton.toggled['bool'].connect(lambda: self.progressBar.setValue(20))
+        self.radioButton_2.toggled['bool'].connect(lambda: self.progressBar.setValue(40))
+        self.radioButton_3.toggled['bool'].connect(lambda: self.progressBar.setValue(60))
+        self.radioButton_4.toggled['bool'].connect(lambda: self.progressBar.setValue(80))
+        self.radioButton_5.toggled['bool'].connect(lambda: self.progressBar.setValue(100))
 
     # Program Functions
     def on_click(self, index):
@@ -61,10 +57,16 @@ class Logic(QMainWindow, Ui_MainWindow, Invoice):
         path_str = str(path)
         os.startfile(path_str)
 
-    def last_clicked(self, index):
-        """Get the name of the file which was clicked last"""
-        file_name = self.fileModel.fileName(index)
-        print(file_name[:-5])
+    def process_status(self, index):
+        """Get the status of the file which was clicked last"""
+        raw_filename = self.fileModel.fileName(index)
+        file_name = raw_filename[:-5]
+        status_query = collection.find_one({"invoice_name": f"{file_name}"})
+        if status_query["status"] == 'Draft':
+            self.radioButton.setChecked(True)
+        if self.radioButton_2.toggled:
+            collection.update_one({"invoice_name":f"{file_name}"},
+                                  {"$set":{"status":"Approved"}})
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""

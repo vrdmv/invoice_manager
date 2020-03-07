@@ -4,14 +4,15 @@ from docx import Document
 import os
 from pymongo import MongoClient
 
-cluster = MongoClient("mongodb+srv://dimovik:azviki123@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
+
+cluster = MongoClient("mongodb+srv://dimovik:10307060@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
 database = cluster["invoiceman"]
 collection = database["invoice_status"]
+
 
 class Invoice(QInputDialog):
     """This class represents an invoice, containing its specific attributes
      and the methods that apply to it"""
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.doc = Document()

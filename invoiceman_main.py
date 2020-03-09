@@ -14,8 +14,6 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     """The Logic class contains all of the program's functions"""
     def __init__(self):
         super().__init__()
-
-        # Set up the user interface
         self.setupUi(self)
 
         # "New Project" button function call
@@ -28,8 +26,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         # displayed in the treeview.
         self.listView.clicked.connect(self.on_click)
 
-        # Prints / returns the name of the file which was clicked last
-        self.treeView.clicked.connect(self.process_status)
+        # Returns the name of the file which was clicked last
+        self.treeView.clicked.connect(self.check_status)
 
         # Open item in treeview when double-clicked
         self.treeView.doubleClicked.connect(self.on_dblclick)
@@ -38,11 +36,11 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.customContextMenuRequested.connect(self.openmenu)
 
         # Update progress bar based on radio button toggled
-        self.radioButton.toggled['bool'].connect(lambda: self.progressBar.setValue(20))
-        self.radioButton_2.toggled['bool'].connect(lambda: self.progressBar.setValue(40))
-        self.radioButton_3.toggled['bool'].connect(lambda: self.progressBar.setValue(60))
-        self.radioButton_4.toggled['bool'].connect(lambda: self.progressBar.setValue(80))
-        self.radioButton_5.toggled['bool'].connect(lambda: self.progressBar.setValue(100))
+        self.radioButton.toggled['bool'].connect(lambda: self.progressBar.setValue(25))
+        self.radioButton_2.toggled['bool'].connect(lambda: self.progressBar.setValue(50))
+        self.radioButton_3.toggled['bool'].connect(lambda: self.progressBar.setValue(75))
+        self.radioButton_4.toggled['bool'].connect(lambda: self.progressBar.setValue(100))
+
 
     # Program Functions
     def on_click(self, index):
@@ -57,16 +55,19 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         path_str = str(path)
         os.startfile(path_str)
 
-    def process_status(self, index):
-        """Get the status of the file which was clicked last"""
+    def check_status(self, index):
+        """Check invoice status based on database etries"""
         raw_filename = self.fileModel.fileName(index)
         file_name = raw_filename[:-5]
         status_query = collection.find_one({"invoice_name": f"{file_name}"})
         if status_query["status"] == 'Draft':
             self.radioButton.setChecked(True)
-        if self.radioButton_2.toggled:
-            collection.update_one({"invoice_name":f"{file_name}"},
-                                  {"$set":{"status":"Approved"}})
+        if status_query["status"] == 'Dispatched':
+            self.radioButton_2.setChecked(True)
+        if status_query["status"] == 'Paid':
+            self.radioButton_3.setChecked(True)
+        if status_query["status"] == 'Overdue':
+            self.radioButton_4.setChecked(True)
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""
@@ -82,15 +83,16 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def copy(self, index):
         """Copy the selected file within the same directory."""
         source = self.fileModel.fileInfo(index).absoluteFilePath()
-        copy_str = "(copy)"
         destination = self.dirModel.fileInfo(index).absoluteFilePath()
-        destination_str = str(destination)
-        destination_firstfew = destination_str[:-5]
-        destintion_final4 = destination_str[-5:]
-        final_destination = destination_firstfew + f"{copy_str}" + \
-            destintion_final4
-        shutil.copy(os.path.abspath(source),
-                    os.path.abspath(final_destination))
+        dest_str = str(destination)
+        dest_1half = dest_str[:-5]
+        dest_2half = dest_str[-5:]
+        if not os.path.exists(dest_str):
+            shutil.copy(os.path.abspath(source), os.path.abspath(dest_str))
+        else:
+            copy = " - Copy"
+            new_dest = dest_1half + f"{copy}" + dest_2half
+            shutil.copy(os.path.abspath(source), os.path.abspath(new_dest))
 
     def openmenu(self, position):
         """Setup a context menu, containing various options, to open upon right

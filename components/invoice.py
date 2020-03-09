@@ -30,11 +30,11 @@ class Invoice(QInputDialog):
             paragraph.add_run("\nLorem ipsum")
             os.chdir(work_dir)
             self.doc.save(f"{self.name}" + ".docx")
-            self.set_status()
+            self.set_initstatus()
         else:
             pass
 
-    def set_status(self):
+    def set_initstatus(self):
         """Set the invoice's status"""
         post = {"invoice_name": f"{self.name}", "status": "Draft"}
         collection.insert_one(post)

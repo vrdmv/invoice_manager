@@ -15,11 +15,12 @@ class Invoice(QInputDialog):
      and the methods that apply to it"""
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.doc = Document()
+
 
     def make_invoice(self):
         """Prompt the user to specify a name for the invoice, create it and save
         it in the working directory """
+        self.doc = Document()
         work_dir = create_workdir()
         inv_input = QInputDialog()
         text, ok = inv_input.getText(self, "Invoice name",

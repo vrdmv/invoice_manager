@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
 from components.invoice import Invoice, collection
+from components.contextmenu import ContextMenu
 from workenv import *
 import sys
 import shutil
@@ -15,32 +15,12 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        # "New Project" button function call
         self.project_button.clicked.connect(self.make_project)
-
-        # "New Invoice" button function call
         self.invoice_button.clicked.connect(self.make_invoice)
-
-        # When folder in listView is clicked, the items stored in it are
-        # displayed in the treeview.
         self.listView.clicked.connect(self.on_click)
-
-        # Returns the name of the file which was clicked last
         self.treeView.clicked.connect(self.check_status)
-
-        # Open item in treeview when double-clicked
-        self.treeView.doubleClicked.connect(self.on_dblclick)
-
-        # Open context menu when item clicked in treeView.
-        self.treeView.customContextMenuRequested.connect(self.openmenu)
-
-        # Update progress bar based on radio button toggled
-        self.radioButton.toggled['bool'].connect(lambda: self.progressBar.setValue(25))
-        self.radioButton_2.toggled['bool'].connect(lambda: self.progressBar.setValue(50))
-        self.radioButton_3.toggled['bool'].connect(lambda: self.progressBar.setValue(75))
-        self.radioButton_4.toggled['bool'].connect(lambda: self.progressBar.setValue(100))
-
+        self.treeView.doubleClicked.connect(self.open_file)
+        self.treeView.customContextMenuRequested.connect(self.open_menu)
 
     # Program Functions
     def on_click(self, index):
@@ -49,25 +29,32 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         path = self.dirModel.fileInfo(index).absoluteFilePath()
         self.treeView.setRootIndex(self.fileModel.setRootPath(path))
 
-    def on_dblclick(self, index):
+    def open_file(self, index):
         """ Open file upon double-click."""
         path = self.fileModel.fileInfo(index).absoluteFilePath()
         path_str = str(path)
         os.startfile(path_str)
 
     def check_status(self, index):
-        """Check invoice status based on database etries"""
+        """Check invoice status based on database entries."""
         raw_filename = self.fileModel.fileName(index)
         file_name = raw_filename[:-5]
         status_query = collection.find_one({"invoice_name": f"{file_name}"})
-        if status_query["status"] == 'Draft':
-            self.radioButton.setChecked(True)
-        if status_query["status"] == 'Dispatched':
-            self.radioButton_2.setChecked(True)
-        if status_query["status"] == 'Paid':
-            self.radioButton_3.setChecked(True)
-        if status_query["status"] == 'Overdue':
-            self.radioButton_4.setChecked(True)
+        try:
+            if status_query["status"] == 'Draft':
+                self.progressBar.setText("Draft")
+                self.progressBar.setValue(25)
+            if status_query["status"] == 'Dispatched':
+                self.progressBar.setText("Dispatched")
+                self.progressBar.setValue(50)
+            if status_query["status"] == 'Overdue':
+                self.progressBar.setText("Overdue")
+                self.progressBar.setValue(75)
+            if status_query["status"] == 'Paid':
+                self.progressBar.setText("Paid")
+                self.progressBar.setValue(100)
+        except TypeError:
+            return
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin"""
@@ -94,27 +81,34 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             new_dest = dest_1half + f"{copy}" + dest_2half
             shutil.copy(os.path.abspath(source), os.path.abspath(new_dest))
 
-    def openmenu(self, position):
+    def open_menu(self, position):
         """Setup a context menu, containing various options, to open upon right
         click."""
         index = self.treeView.indexAt(position)
+        raw_filename = self.fileModel.fileName(index)
+        file_name = raw_filename[:-5]
         if not index.isValid():
             return
-        menu = QMenu(self)
-        rename_action = menu.addAction("Rename")
-        copy_action = menu.addAction("Copy")
-        delete_action = menu.addAction("Send to trashbin")
-        archive_action = menu.addAction("Move to archive")
+        menu = ContextMenu(self)
         action = menu.exec_(self.treeView.viewport().mapToGlobal(position))
         try:
-            if action == delete_action:
+            if action == menu.delete_action:
                 self.dlt(index)
-            if action == rename_action:
+            if action == menu.rename_action:
                 self.treeView.edit(index)
-            if action == copy_action:
+            if action == menu.copy_action:
                 self.copy(index)
-            if action == archive_action:
+            if action == menu.archive_action:
                 self.move_to_archive(index)
+            if action == menu.update_1:
+                collection.update_one({"invoice_name": f"{file_name}"},
+                                      {"$set": {"status": "Dispatched"}})
+            if action == menu.update_2:
+                collection.update_one({"invoice_name": f"{file_name}"},
+                                      {"$set": {"status": "Paid"}})
+            if action == menu.update_3:
+                collection.update_one({"invoice_name": f"{file_name}"},
+                                      {"$set": {"status": "Overdue"}})
         except PermissionError:
             print("Nope, can't do that!")
 

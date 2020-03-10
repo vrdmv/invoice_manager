@@ -13,7 +13,7 @@ class UiMainWindow(object):
     and its underlying functions"""
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("Invoice Manager")
-        MainWindow.resize(1120, 800)
+        MainWindow.resize(1120, 750)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
 
@@ -38,13 +38,10 @@ class UiMainWindow(object):
         # Graphical components
         self.project_button = Button("project_button", (10, 80, 121, 41), self.centralwidget)
         self.invoice_button = Button("invoice_button", (10, 20, 121, 41), self.centralwidget)
-        self.radioButton = RadioButton("Draft", (460, 60, 95, 20), (self.centralwidget))
-        self.radioButton_2 = RadioButton("Dispatched", (570, 60, 95, 20), (self.centralwidget))
-        self.radioButton_3 = RadioButton("Paid", (700, 60, 95, 20), (self.centralwidget))
-        self.radioButton_4 = RadioButton("Overdue", (830, 60, 95, 20), (self.centralwidget))
         self.progressBar = ProgressBar(self.centralwidget)
         self.project_label = Label("project_label", (90, 160, 61, 21), self.centralwidget)
-        self.invoice_label = Label("invoice_label", (270, 60, 81, 21), self.centralwidget)
+        self.invoice_label = Label("invoice_label", (600, 60, 81, 21), self.centralwidget)
+        self.status_label = Label("status_label", (210, 550, 800, 263), self.centralwidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
@@ -62,7 +59,4 @@ class UiMainWindow(object):
         self.invoice_button.setToolTip("Shortcut: Ctrl+N")
         self.project_label.setText(_translate("MainWindow", "Projects"))
         self.invoice_label.setText(_translate("MainWindow", "Invoices"))
-        self.radioButton.setText(_translate("MainWindow", "Draft"))
-        self.radioButton_2.setText(_translate("MainWindow", "Dispatched"))
-        self.radioButton_3.setText(_translate("MainWindow", "Paid"))
-        self.radioButton_4.setText(_translate("MainWindow", "Overdue"))
+        self.status_label.setText(_translate("MainWindow", "Status: "))

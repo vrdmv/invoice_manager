@@ -12,13 +12,14 @@ class ProgressBar(QtWidgets.QProgressBar):
         self.setObjectName("progressBar")
         self._text = None
 
-    def setText(self, text):
+    def renew(self, text, value):
         self._text = text
+        self.setValue(value)
 
     def text(self):
         return self._text
 
-    def change_color(self, color):
-        template_css = """QProgressBar::chunk { background: %s; }"""
-        css = template_css % color
-        self.setStyleSheet(css)
+    # def change_color(self, color):
+    #     template_css = """QProgressBar::chunk { background: %s; }"""
+    #     css = template_css % color
+    #     self.setStyleSheet(css)

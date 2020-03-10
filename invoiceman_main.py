@@ -18,14 +18,14 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.setupUi(self)
         self.project_button.clicked.connect(self.make_project)
         self.invoice_button.clicked.connect(self.make_invoice)
-        self.listView.clicked.connect(self.on_click)
+        self.listView.clicked.connect(self.show_files)
         self.treeView.clicked.connect(self.check_status)
         self.treeView.doubleClicked.connect(self.open_file)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
 
     # Program Functions
-    def on_click(self, index):
-        """When a directory is selected in the list view, show all of its files
+    def show_files(self, index):
+        """When a directory is selected in the list view, display all of its files
         in the tree view."""
         path = self.dirModel.fileInfo(index).absoluteFilePath()
         self.treeView.setRootIndex(self.fileModel.setRootPath(path))
@@ -42,17 +42,13 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         file_name = raw_filename[:-5]
         try:
             if status_query(file_name) == 'Draft':
-                self.progressBar.setText("Draft")
-                self.progressBar.setValue(25)
+                self.progressBar.renew("Draft", 25)
             if status_query(file_name) == 'Dispatched':
-                self.progressBar.setText("Dispatched")
-                self.progressBar.setValue(50)
+                self.progressBar.renew("Dispatched", 50)
             if status_query(file_name) == 'Overdue':
-                self.progressBar.setText("Overdue")
-                self.progressBar.setValue(75)
+                self.progressBar.renew("Overdue", 75)
             if status_query(file_name) == 'Paid':
-                self.progressBar.setText("Paid")
-                self.progressBar.setValue(100)
+                self.progressBar.renew("Paid", 100)
         except TypeError:
             return
 

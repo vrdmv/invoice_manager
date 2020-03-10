@@ -2,12 +2,7 @@ from PyQt5.QtWidgets import *
 from workenv import create_workdir
 from docx import Document
 import os
-from pymongo import MongoClient
-
-
-cluster = MongoClient("mongodb+srv://dimovik:10307060@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
-database = cluster["invoiceman"]
-collection = database["invoice_status"]
+from database import *
 
 
 class Invoice(QInputDialog):
@@ -15,7 +10,6 @@ class Invoice(QInputDialog):
      and the methods that apply to it"""
     def __init__(self, parent=None):
         super().__init__(parent)
-
 
     def make_invoice(self):
         """Prompt the user to specify a name for the invoice, create it and save
@@ -31,11 +25,7 @@ class Invoice(QInputDialog):
             paragraph.add_run("\nLorem ipsum")
             os.chdir(work_dir)
             self.doc.save(f"{self.name}" + ".docx")
-            self.set_initstatus()
+            set_initstatus(self.name)
         else:
             pass
 
-    def set_initstatus(self):
-        """Set the invoice's status"""
-        post = {"invoice_name": f"{self.name}", "status": "Draft"}
-        collection.insert_one(post)

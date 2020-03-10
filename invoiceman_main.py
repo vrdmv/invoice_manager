@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import *
 from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
-from components.invoice import Invoice, collection
+from components.invoice import Invoice
 from components.contextmenu import ContextMenu
+from database import *
 from workenv import *
 import sys
 import shutil
@@ -39,18 +40,17 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """Check invoice status based on database entries."""
         raw_filename = self.fileModel.fileName(index)
         file_name = raw_filename[:-5]
-        status_query = collection.find_one({"invoice_name": f"{file_name}"})
         try:
-            if status_query["status"] == 'Draft':
+            if status_query(file_name) == 'Draft':
                 self.progressBar.setText("Draft")
                 self.progressBar.setValue(25)
-            if status_query["status"] == 'Dispatched':
+            if status_query(file_name) == 'Dispatched':
                 self.progressBar.setText("Dispatched")
                 self.progressBar.setValue(50)
-            if status_query["status"] == 'Overdue':
+            if status_query(file_name) == 'Overdue':
                 self.progressBar.setText("Overdue")
                 self.progressBar.setValue(75)
-            if status_query["status"] == 'Paid':
+            if status_query(file_name) == 'Paid':
                 self.progressBar.setText("Paid")
                 self.progressBar.setValue(100)
         except TypeError:
@@ -77,8 +77,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         if not os.path.exists(dest_str):
             shutil.copy(os.path.abspath(source), os.path.abspath(dest_str))
         else:
-            copy = " - Copy"
-            new_dest = dest_1half + f"{copy}" + dest_2half
+            new_dest = dest_1half + " - Copy" + dest_2half
             shutil.copy(os.path.abspath(source), os.path.abspath(new_dest))
 
     def open_menu(self, position):
@@ -92,23 +91,20 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         menu = ContextMenu(self)
         action = menu.exec_(self.treeView.viewport().mapToGlobal(position))
         try:
-            if action == menu.delete_action:
+            if action == menu.delete:
                 self.dlt(index)
-            if action == menu.rename_action:
+            if action == menu.rename:
                 self.treeView.edit(index)
-            if action == menu.copy_action:
+            if action == menu.copy:
                 self.copy(index)
-            if action == menu.archive_action:
+            if action == menu.archive:
                 self.move_to_archive(index)
-            if action == menu.update_1:
-                collection.update_one({"invoice_name": f"{file_name}"},
-                                      {"$set": {"status": "Dispatched"}})
-            if action == menu.update_2:
-                collection.update_one({"invoice_name": f"{file_name}"},
-                                      {"$set": {"status": "Paid"}})
-            if action == menu.update_3:
-                collection.update_one({"invoice_name": f"{file_name}"},
-                                      {"$set": {"status": "Overdue"}})
+            if action == menu.dispatched:
+                update2dispatched(file_name)
+            if action == menu.paid:
+                update2paid(file_name)
+            if action == menu.overdue:
+                update2overdue(file_name)
         except PermissionError:
             print("Nope, can't do that!")
 
@@ -128,6 +124,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                     active = False
             else:
                 active = False
+
 
 create_workdir()
 create_archive()

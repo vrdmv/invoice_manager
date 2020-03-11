@@ -17,15 +17,31 @@ class Invoice(QInputDialog):
         self.doc = Document()
         work_dir = create_workdir()
         inv_input = QInputDialog()
-        text, ok = inv_input.getText(self, "Invoice name",
+        active = True
+        while active:
+            text, ok = inv_input.getText(self, "Invoice name",
                                      "Please enter a name for the invoice:               ")
-        if ok and text != '':
-            self.name = text
-            paragraph = self.doc.add_paragraph('Invoice Report', 'Title')
-            paragraph.add_run("\nLorem ipsum")
-            os.chdir(work_dir)
-            self.doc.save(f"{self.name}" + ".docx")
-            set_initstatus(self.name)
-        else:
-            pass
+            if ok and text != '':
+                self.name = text
+                paragraph = self.doc.add_paragraph('Invoice Report', 'Title')
+                paragraph.add_run("\nLorem ipsum")
+                path = f"{work_dir}" + "\\" + f"{self.name}" + ".docx"
+                if not os.path.exists(path):
+                    os.chdir(work_dir)
+                    self.doc.save(f"{self.name}" + ".docx")
+                    set_initstatus(self.name)
+                    active = False
+                else:
+                    self.show_popup()
+            else:
+                active = False
 
+    def show_popup(self):
+        """Show a popup message if invoice name already exists"""
+        msg = QMessageBox()
+        msg.setWindowTitle("File/folder already exists.")
+        msg.setText("The invoice or project you are trying to create "
+                    "already exists."
+                    " Please specify another name.")
+        msg.setIcon(QMessageBox.Warning)
+        x = msg.exec_()

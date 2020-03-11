@@ -31,3 +31,7 @@ def update2overdue(name):
     """Update the invoice's status"""
     collection.update_one({"invoice_name": f"{name}"},
                           {"$set": {"status": "Overdue"}})
+
+def delete_entry(name):
+    """Delete the database entry."""
+    collection.delete_one({"invoice_name": f"{name}"})

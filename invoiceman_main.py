@@ -18,10 +18,10 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.setupUi(self)
         self.project_button.clicked.connect(self.make_project)
         self.invoice_button.clicked.connect(self.make_invoice)
-        self.listView.clicked.connect(self.show_files)
-        self.treeView.clicked.connect(self.check_status)
         self.treeView.doubleClicked.connect(self.open_file)
+        self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
+        self.listView.clicked.connect(self.show_files)
 
     # Program Functions
     def show_files(self, index):
@@ -33,8 +33,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def open_file(self, index):
         """ Open file upon double-click."""
         path = self.fileModel.fileInfo(index).absoluteFilePath()
-        path_str = str(path)
-        os.startfile(path_str)
+        os.startfile(path)
 
     def check_status(self, index):
         """Check invoice status based on database entries."""
@@ -53,25 +52,28 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             return
 
     def dlt(self, index):
-        """ Send the selected file to the recycle bin"""
+        """ Send the selected file to the recycle bin/delete database entry."""
         path = self.fileModel.fileInfo(index).absoluteFilePath()
         send2trash.send2trash(os.path.abspath(path))
+        delete_entry(path[36:-5])
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
-        source = self.fileModel.fileInfo(index).absoluteFilePath()
-        destination = create_archive()
-        shutil.move(os.path.abspath(source), os.path.abspath(destination))
+        try:
+            source = self.fileModel.fileInfo(index).absoluteFilePath()
+            destination = create_archive()
+            shutil.move(os.path.abspath(source), os.path.abspath(destination))
+        except shutil.Error:
+            return
 
     def copy(self, index):
         """Copy the selected file within the same directory."""
         source = self.fileModel.fileInfo(index).absoluteFilePath()
         destination = self.dirModel.fileInfo(index).absoluteFilePath()
-        dest_str = str(destination)
-        dest_1half = dest_str[:-5]
-        dest_2half = dest_str[-5:]
-        if not os.path.exists(dest_str):
-            shutil.copy(os.path.abspath(source), os.path.abspath(dest_str))
+        dest_1half = destination[:-5]
+        dest_2half = destination[-5:]
+        if not os.path.exists(destination):
+            shutil.copy(os.path.abspath(source), os.path.abspath(destination))
         else:
             new_dest = dest_1half + " - Copy" + dest_2half
             shutil.copy(os.path.abspath(source), os.path.abspath(new_dest))
@@ -118,6 +120,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                 if not os.path.exists(project_dir):
                     os.makedirs(project_dir)
                     active = False
+                else:
+                    self.show_popup()
             else:
                 active = False
 

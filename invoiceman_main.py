@@ -1,4 +1,3 @@
-from PyQt5.QtWidgets import *
 from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
 from components.invoice import Invoice
@@ -17,8 +16,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.listView = ListView(self.tab)
-        self.treeView = TreeView(self.tab)
+        self.listView = ListView(self.tabwidget.main_tab)
+        self.treeView = TreeView(self.tabwidget.main_tab)
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
         self.project_button.clicked.connect(self.make_project)

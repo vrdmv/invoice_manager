@@ -1,7 +1,11 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+import os
+
+path = os.path.join("C:\\", "Invoice Manager")
+
 
 class TreeView(QtWidgets.QTreeView):
     def __init__(self, parent=None):
@@ -16,7 +20,10 @@ class TreeView(QtWidgets.QTreeView):
         self.setDefaultDropAction(Qt.MoveAction)
         self.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.setContextMenuPolicy(Qt.CustomContextMenu)
-
+        self.fileModel = QFileSystemModel()
+        self.fileModel.setReadOnly(False)
+        self.setModel(self.fileModel)
+        self.setRootIndex(self.fileModel.index(path))
 
 
 class ListView(QtWidgets.QListView):
@@ -32,3 +39,9 @@ class ListView(QtWidgets.QListView):
         self.setDefaultDropAction(Qt.MoveAction)
         self.setObjectName("listView")
         self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.dirModel = QFileSystemModel()
+        self.dirModel.setRootPath(QDir.rootPath())
+        self.dirModel.setReadOnly(False)
+        self.setModel(self.dirModel)
+        self.setRootIndex(self.dirModel.index(path))
+

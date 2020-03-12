@@ -3,6 +3,7 @@ from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
 from components.invoice import Invoice
 from components.contextmenu import ContextMenu
+from components.view import *
 from database import *
 from workenv import *
 import sys
@@ -16,6 +17,10 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.listView = ListView(self.tab)
+        self.treeView = TreeView(self.tab)
+        self.treeView.setColumnHidden(1, True)
+        self.treeView.setColumnWidth(0, 300)
         self.project_button.clicked.connect(self.make_project)
         self.invoice_button.clicked.connect(self.make_invoice)
         self.treeView.doubleClicked.connect(self.open_file)
@@ -25,19 +30,19 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
 
     # Program Functions
     def show_files(self, index):
-        """When a directory is selected in the list view, display all of its files
-        in the tree view."""
-        path = self.dirModel.fileInfo(index).absoluteFilePath()
-        self.treeView.setRootIndex(self.fileModel.setRootPath(path))
+        """When a directory is selected in the list view, display all of its
+        files in the tree view."""
+        cur_path = self.listView.dirModel.fileInfo(index).absoluteFilePath()
+        self.treeView.setRootIndex(self.treeView.fileModel.setRootPath(cur_path))
 
     def open_file(self, index):
         """ Open file upon double-click."""
-        path = self.fileModel.fileInfo(index).absoluteFilePath()
-        os.startfile(path)
+        cur_path = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
+        os.startfile(cur_path)
 
     def check_status(self, index):
         """Check invoice status based on database entries."""
-        raw_filename = self.fileModel.fileName(index)
+        raw_filename = self.treeView.fileModel.fileName(index)
         file_name = raw_filename[:-5]
         try:
             if status_query(file_name) == 'Draft':
@@ -53,14 +58,14 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin/delete database entry."""
-        path = self.fileModel.fileInfo(index).absoluteFilePath()
-        send2trash.send2trash(os.path.abspath(path))
+        cur_path = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
+        send2trash.send2trash(os.path.abspath(cur_path))
         delete_entry(path[36:-5])
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
         try:
-            source = self.fileModel.fileInfo(index).absoluteFilePath()
+            source = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
             destination = create_archive()
             shutil.move(os.path.abspath(source), os.path.abspath(destination))
         except shutil.Error:
@@ -68,8 +73,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
 
     def copy(self, index):
         """Copy the selected file within the same directory."""
-        source = self.fileModel.fileInfo(index).absoluteFilePath()
-        destination = self.dirModel.fileInfo(index).absoluteFilePath()
+        source = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
+        destination = self.listView.dirModel.fileInfo(index).absoluteFilePath()
         dest_1half = destination[:-5]
         dest_2half = destination[-5:]
         if not os.path.exists(destination):
@@ -82,7 +87,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """Setup a context menu, containing various options, to open upon right
         click."""
         index = self.treeView.indexAt(position)
-        raw_filename = self.fileModel.fileName(index)
+        raw_filename = self.treeView.fileModel.fileName(index)
         file_name = raw_filename[:-5]
         if not index.isValid():
             return

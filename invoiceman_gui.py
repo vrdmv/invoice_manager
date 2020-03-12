@@ -2,12 +2,10 @@ from components.progressbar import ProgressBar
 from components.label import Label
 from components.button import Button
 from components.view import *
-import os
 
 
 class UiMainWindow(object):
-    """The UIMainWindow class sets up the program's graphical user interface
-    and its underlying functions"""
+    """The UiMainWindow class sets up the program's graphical user interface."""
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("Invoice Manager")
         MainWindow.resize(1120, 750)
@@ -22,25 +20,6 @@ class UiMainWindow(object):
         self.tab_3 = QWidget()
         self.tabwidget.addTab(self.tab_3, "")
 
-        # ListView model characteristics & functionality
-        path = os.path.join("C:\\", "Invoice Manager")
-        self.listView = ListView(self.tab)
-        self.dirModel = QtWidgets.QFileSystemModel()
-        self.dirModel.setRootPath(QtCore.QDir.rootPath())
-        self.dirModel.setReadOnly(False)
-        self.listView.setModel(self.dirModel)
-        self.listView.setRootIndex(self.dirModel.index(path))
-
-        # TreeView model characteristics & functionality
-        self.fileModel = QtWidgets.QFileSystemModel()
-        self.fileModel.setReadOnly(False)
-        self.treeView = TreeView(self.tab)
-        self.treeView.setModel(self.fileModel)
-        self.treeView.setRootIndex(self.fileModel.index(path))
-        self.treeView.setColumnHidden(1, True)
-        self.treeView.setColumnWidth(0, 300)
-
-        # Graphical components
         self.project_button = Button("project_button", (10, 80, 121, 41), self.tab)
         self.invoice_button = Button("invoice_button", (10, 20, 121, 41), self.tab)
         self.project_label = Label("project_label", (90, 160, 61, 21), self.tab)
@@ -66,6 +45,9 @@ class UiMainWindow(object):
         self.project_label.setText(_translate("MainWindow", "Projects"))
         self.invoice_label.setText(_translate("MainWindow", "Invoices"))
         self.status_label.setText(_translate("MainWindow", "Status: "))
-        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab), _translate("MainWindow", "Main"))
-        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab_2), _translate("MainWindow", "Visual"))
-        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab_3), _translate("MainWindow", "Exchange rates"))
+        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab),
+                                  _translate("MainWindow", "Main"))
+        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab_2),
+                                  _translate("MainWindow", "Visual"))
+        self.tabwidget.setTabText(self.tabwidget.indexOf(self.tab_3),
+                                  _translate("MainWindow", "Exchange rates"))

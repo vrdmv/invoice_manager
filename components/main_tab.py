@@ -12,3 +12,4 @@ class MainTab(QtWidgets.QTabWidget):
         self.addTab(self.visual_tab, "")
         self.exch_tab = Exchange()
         self.addTab(self.exch_tab, "")
+

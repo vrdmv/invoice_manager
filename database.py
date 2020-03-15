@@ -35,3 +35,30 @@ def update2overdue(name):
 def delete_entry(name):
     """Delete the database entry."""
     collection.delete_one({"invoice_name": f"{name}"})
+
+def get_dispatched():
+    """Checks the status of all invoices."""
+    dispatched = []
+    results = collection.find({})
+    for result in results:
+        if result['status'] == "Dispatched":
+            dispatched.append(result['status'])
+    return(len(dispatched))
+
+def get_overdue():
+    """Checks the status of all invoices."""
+    paid = []
+    results = collection.find({})
+    for result in results:
+        if result['status'] == "Overdue":
+            paid.append(result['status'])
+    return(len(paid))
+
+def get_paid():
+    """Checks the status of all invoices."""
+    overdue = []
+    results = collection.find({})
+    for result in results:
+        if result['status'] == "Paid":
+            overdue.append(result["status"])
+    return(len(overdue))

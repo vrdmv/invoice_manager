@@ -59,7 +59,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """ Send the selected file to the recycle bin/delete database entry."""
         cur_path = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
         send2trash.send2trash(os.path.abspath(cur_path))
-        delete_entry(path[36:-5])
+        delete_entry(cur_path[36:-5])
 
     def move_to_archive(self, index):
         """Move selected file to archive"""

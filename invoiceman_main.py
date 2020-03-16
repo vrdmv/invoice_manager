@@ -26,6 +26,12 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
         self.listView.clicked.connect(self.show_files)
+        self.tabwidget.currentChanged.connect(self.update_all)
+
+    def update_all(self):
+        index = self.tabwidget.currentIndex()
+        if index == 1:
+            print("signal")
 
     # Program Functions
     def show_files(self, index):

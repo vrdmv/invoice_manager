@@ -54,19 +54,19 @@ def get_dispatched():
 
 def get_overdue():
     """Checks the status of all invoices."""
-    paid = []
+    overdue = []
     results = collection.find({})
     for result in results:
         if result['status'] == "Overdue":
-            paid.append(result['status'])
-    return len(paid)
+            overdue.append(result['status'])
+    return len(overdue)
 
 
 def get_paid():
     """Checks the status of all invoices."""
-    overdue = []
+    paid = []
     results = collection.find({})
     for result in results:
         if result['status'] == "Paid":
-            overdue.append(result["status"])
-    return len(overdue)
+            paid.append(result["status"])
+    return len(paid)

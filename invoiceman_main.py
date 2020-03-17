@@ -26,12 +26,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
         self.listView.clicked.connect(self.show_files)
-        self.tabwidget.currentChanged.connect(self.update_all)
-
-    def update_all(self):
-        index = self.tabwidget.currentIndex()
-        if index == 1:
-            print("signal")
+        self.tabwidget.currentChanged.connect(self.refresh_tab)
 
     # Program Functions
     def show_files(self, index):
@@ -60,6 +55,11 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                 self.progressBar.renew("Paid", 100)
         except TypeError:
             return
+
+    def refresh_tab(self):
+        index = self.tabwidget.currentIndex()
+        if index == 1:
+            self.tabwidget.visual_tab.update_piechart()
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin/delete database entry."""
@@ -114,7 +114,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             if action == menu.overdue:
                 update2overdue(file_name)
         except PermissionError:
-            print("Nope, can't do that!")
+            return
 
     def make_project(self):
         """Create a new project folder."""

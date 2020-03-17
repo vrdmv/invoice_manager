@@ -1,12 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt
 from database import *
-
-val_dispatched = get_dispatched()
-val_overdue = get_overdue()
-val_paid = get_paid()
 
 
 class Visual(QtWidgets.QWidget):
@@ -14,11 +10,11 @@ class Visual(QtWidgets.QWidget):
         super().__init__(parent)
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
-        self.i = 0
-        self.timer = QTimer()
-        self.timer.setInterval(3000)
-        self.timer.timeout.connect(self.update_piechart)
-        self.timer.start()
+        # self.i = 0
+       #  self.timer = QTimer()
+        # self.timer.setInterval(3000)
+        # self.timer.timeout.connect(self.update_piechart)
+        # self.timer.start()
         self.series = QPieSeries()
         self.pie_slice = QPieSlice()
         self.chart = QChart()
@@ -26,10 +22,15 @@ class Visual(QtWidgets.QWidget):
         self.create_piechart()
 
     def update_piechart(self):
-        self.i += 1
-        self.series.append("Dispatched", val_dispatched)
-        self.series.append("Overdue", val_overdue)
-        self.series.append("Paid", val_paid)
+        # self.i += 1
+        self.series.clear()
+        self.num_disp = get_dispatched()
+        self.num_ovrd = get_overdue()
+        self.num_paid = get_paid()
+        self.series.append("Dispatched", self.num_disp)
+        self.series.append("Overdue", self.num_ovrd)
+        self.series.append("Paid", self.num_paid)
+
 
     def create_piechart(self):
         """Create a pie chart that lays out all of the invoices' current status"""
@@ -49,5 +50,6 @@ class Visual(QtWidgets.QWidget):
 
         self.chartview.setRenderHint(QPainter.Antialiasing)
         self.layout.addWidget(self.chartview)
+
 
 

@@ -1,17 +1,17 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
-from PyQt5.QtGui import QPainter, QPen
-from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPainter, QFont
+from PyQt5.QtCore import Qt, QRect
 from database import *
 
 
 class Visual(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.layout = QtWidgets.QVBoxLayout()
+        self.layout = QtWidgets.QHBoxLayout()
         self.setLayout(self.layout)
         # self.i = 0
-       #  self.timer = QTimer()
+        #  self.timer = QTimer()
         # self.timer.setInterval(3000)
         # self.timer.timeout.connect(self.update_piechart)
         # self.timer.start()
@@ -31,25 +31,18 @@ class Visual(QtWidgets.QWidget):
         self.series.append("Overdue", self.num_ovrd)
         self.series.append("Paid", self.num_paid)
 
-
     def create_piechart(self):
         """Create a pie chart that lays out all of the invoices' current status"""
-        self.pie_slice.setExploded(True)
-        self.pie_slice.setLabelVisible(True)
-        self.pie_slice.setPen(QPen(Qt.darkGreen, 2))
-        self.pie_slice.setBrush(Qt.green)
-
-        self.chart.legend().hide()
         self.chart.addSeries(self.series)
         self.chart.createDefaultAxes()
         self.chart.setAnimationOptions(QChart.SeriesAnimations)
+        font = QFont()
+        font.setFamily("Arial")
+        font.setPointSize(30)
         self.chart.setTitle("Invoice status summary: ")
-
+        self.chart.setTitleFont(font)
+        self.chart.setTheme(QChart.ChartThemeBlueIcy)
         self.chart.legend().setVisible(True)
         self.chart.legend().setAlignment(Qt.AlignBottom)
-
         self.chartview.setRenderHint(QPainter.Antialiasing)
         self.layout.addWidget(self.chartview)
-
-
-

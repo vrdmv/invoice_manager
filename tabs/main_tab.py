@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtWidgets
-from components.visual import Visual
-from components.exchange import Exchange
+from tabs.visual import Visual
+from tabs.exchange import Exchange
 
 class MainTab(QtWidgets.QTabWidget):
     def __init__(self, parent=None):

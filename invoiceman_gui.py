@@ -2,7 +2,7 @@ from components.progressbar import ProgressBar
 from components.label import Label
 from components.button import Button
 from components.view import *
-from components.main_tab import MainTab
+from tabs.main_tab import MainTab
 
 
 class UiMainWindow(object):
@@ -13,16 +13,11 @@ class UiMainWindow(object):
         MainWindow.setTabShape(QTabWidget.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.tabwidget = MainTab(self.centralwidget)
-        self.project_button = Button("project_button", (10, 80, 121, 41),
-                                     self.tabwidget.main_tab)
-        self.invoice_button = Button("invoice_button", (10, 20, 121, 41),
-                                     self.tabwidget.main_tab)
-        self.project_label = Label("project_label", (80, 155, 81, 21),
-                                   self.tabwidget.main_tab)
-        self.invoice_label = Label("invoice_label", (600, 50, 81, 21),
-                                   self.tabwidget.main_tab)
-        self.status_label = Label("status_label", (210, 550, 800, 263),
-                                  self.tabwidget.main_tab)
+        self.project_button = Button((10, 80, 121, 41), self.tabwidget.main_tab)
+        self.invoice_button = Button((10, 20, 121, 41), self.tabwidget.main_tab)
+        self.project_label = Label((80, 155, 95, 21), self.tabwidget.main_tab)
+        self.invoice_label = Label((600, 50, 95, 21), self.tabwidget.main_tab)
+        self.status_label = Label((210, 550, 800, 263), self.tabwidget.main_tab)
         self.progressBar = ProgressBar(self.tabwidget.main_tab)
 
         MainWindow.setCentralWidget(self.centralwidget)
@@ -49,32 +44,32 @@ class UiMainWindow(object):
                                   _translate("MainWindow", "Visual"))
         self.tabwidget.setTabText(self.tabwidget.indexOf(self.tabwidget.exch_tab),
                                   _translate("MainWindow", "Exchange rates"))
-        self.tabwidget.exch_tab.label_2.setText(_translate("MainWindow", "Convert"))
-        self.tabwidget.exch_tab.label_3.setText(_translate("MainWindow", "of"))
-        self.tabwidget.exch_tab.label_4.setText(_translate("MainWindow", "to"))
-        self.tabwidget.exch_tab.label_8.setText(_translate("MainWindow", "with exchange rate of"))
-        self.tabwidget.exch_tab.label_9.setText(_translate("MainWindow", "(dd-mm-yyyy)"))
-        self.tabwidget.exch_tab.pushButton_3.setText(_translate("MainWindow", "Convert amounts"))
-        self.tabwidget.exch_tab.tableWidget.setSortingEnabled(False)
-        item = self.tabwidget.exch_tab.tableWidget.verticalHeaderItem(0)
+        self.tabwidget.exch_tab.label.setText(_translate("MainWindow",
+                                                           "Convert"))
+        self.tabwidget.exch_tab.label_2.setText(_translate("MainWindow", "of"))
+        self.tabwidget.exch_tab.label_3.setText(_translate("MainWindow", "to"))
+        self.tabwidget.exch_tab.label_4.setText(_translate("MainWindow",
+                                                           "with exchange rate of"))
+        self.tabwidget.exch_tab.label_5.setText(_translate("MainWindow",
+                                                           "(dd-mm-yyyy)"))
+        self.tabwidget.exch_tab.convert_button.setText(_translate("MainWindow",
+                                                                "Convert amounts"))
+        # self.tabwidget.exch_tab.convert_button.setShortcut(_translate("MainWindow",
+                                                                      # "Enter"))
+        self.tabwidget.exch_tab.convert_button.setToolTip("Shortcut: Enter")
+        self.tabwidget.exch_tab.tablewidget.setSortingEnabled(False)
+        item = self.tabwidget.exch_tab.tablewidget.verticalHeaderItem(0)
         item.setText(_translate("MainWindow", ""))
-        item = self.tabwidget.exch_tab.tableWidget.horizontalHeaderItem(0)
+        item = self.tabwidget.exch_tab.tablewidget.horizontalHeaderItem(0)
         item.setText(_translate("MainWindow", "Date"))
-        item = self.tabwidget.exch_tab.tableWidget.horizontalHeaderItem(1)
+        item = self.tabwidget.exch_tab.tablewidget.horizontalHeaderItem(1)
         item.setText(_translate("MainWindow", "Original amount"))
-        item = self.tabwidget.exch_tab.tableWidget.horizontalHeaderItem(2)
+        item = self.tabwidget.exch_tab.tablewidget.horizontalHeaderItem(2)
         item.setText(_translate("MainWindow", "Converted amount"))
-        item = self.tabwidget.exch_tab.tableWidget.horizontalHeaderItem(3)
+        item = self.tabwidget.exch_tab.tablewidget.horizontalHeaderItem(3)
         item.setText(_translate("MainWindow", "Exchange rate"))
-        __sortingEnabled = self.tabwidget.exch_tab.tableWidget.isSortingEnabled()
-        self.tabwidget.exch_tab.tableWidget.setSortingEnabled(False)
-        item = self.tabwidget.exch_tab.tableWidget.item(0, 0)
-        item.setText(_translate("MainWindow", "(dd-mm-yyyy)"))
-        item = self.tabwidget.exch_tab.tableWidget.item(0, 1)
-        item.setText(_translate("MainWindow", "1.00 USD"))
-        item = self.tabwidget.exch_tab.tableWidget.item(0, 2)
-        item.setText(_translate("MainWindow", "0.81 EUR "))
-        item = self.tabwidget.exch_tab.tableWidget.item(0, 3)
-        item.setText(_translate("MainWindow", "1 EUR = 1.2378 USD"))
-        self.tabwidget.exch_tab.label.setText(_translate("MainWindow", "Currency converter"))
-        self.tabwidget.exch_tab.tableWidget.setSortingEnabled(__sortingEnabled)
+        __sortingEnabled = self.tabwidget.exch_tab.tablewidget.isSortingEnabled()
+        self.tabwidget.exch_tab.tablewidget.setSortingEnabled(False)
+        self.tabwidget.exch_tab.label_6.setText(_translate("MainWindow",
+                                                         "- Currency converter -"))
+        self.tabwidget.exch_tab.tablewidget.setSortingEnabled(__sortingEnabled)

@@ -1,8 +1,8 @@
 from invoiceman_gui import UiMainWindow
 from components.palette import dark_palette
-from components.invoice import Invoice
 from components.contextmenu import ContextMenu
 from components.view import *
+from invoice import Invoice
 from database import *
 from workenv import *
 import sys
@@ -21,7 +21,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
         self.project_button.clicked.connect(self.make_project)
-        self.invoice_button.clicked.connect(self.make_invoice)
+        self.invoice_button.clicked.connect(self.write_fillable_pdf)
         self.treeView.doubleClicked.connect(self.open_file)
         self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
@@ -43,7 +43,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     def check_status(self, index):
         """Check invoice status based on database entries."""
         raw_filename = self.treeView.fileModel.fileName(index)
-        file_name = raw_filename[:-5]
+        file_name = raw_filename[:-4]
         try:
             if status_query(file_name) == 'Draft':
                 self.progressBar.renew("Draft", 25)
@@ -65,7 +65,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """ Send the selected file to the recycle bin/delete database entry."""
         cur_path = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
         send2trash.send2trash(os.path.abspath(cur_path))
-        delete_entry(cur_path[36:-5])
+        delete_entry(cur_path[36:-4])
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
@@ -80,8 +80,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """Copy the selected file within the same directory."""
         source = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
         destination = self.listView.dirModel.fileInfo(index).absoluteFilePath()
-        dest_1half = destination[:-5]
-        dest_2half = destination[-5:]
+        dest_1half = destination[:-4]
+        dest_2half = destination[-4:]
         if not os.path.exists(destination):
             shutil.copy(os.path.abspath(source), os.path.abspath(destination))
         else:
@@ -93,7 +93,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         click."""
         index = self.treeView.indexAt(position)
         raw_filename = self.treeView.fileModel.fileName(index)
-        file_name = raw_filename[:-5]
+        file_name = raw_filename[:-4]
         if not index.isValid():
             return
         menu = ContextMenu(self)

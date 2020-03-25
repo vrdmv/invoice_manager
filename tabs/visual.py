@@ -1,8 +1,8 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtGui import QPainter, QFont
-from PyQt5.QtCore import Qt, QRect
-from database import *
+from PyQt5.QtCore import Qt
+import database
 
 
 class Visual(QtWidgets.QWidget):
@@ -24,9 +24,9 @@ class Visual(QtWidgets.QWidget):
     def update_piechart(self):
         # self.i += 1
         self.series.clear()
-        self.num_disp = get_dispatched()
-        self.num_ovrd = get_overdue()
-        self.num_paid = get_paid()
+        self.num_disp = database.get_dispatched()
+        self.num_ovrd = database.get_overdue()
+        self.num_paid = database.get_paid()
         self.series.append("Dispatched", self.num_disp)
         self.series.append("Overdue", self.num_ovrd)
         self.series.append("Paid", self.num_paid)

@@ -3,8 +3,8 @@ from components.palette import dark_palette
 from components.contextmenu import ContextMenu
 from components.view import *
 from invoice import Invoice
-from database import *
 from workenv import *
+import database
 import sys
 import shutil
 import send2trash
@@ -21,7 +21,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.setColumnHidden(1, True)
         self.treeView.setColumnWidth(0, 300)
         self.project_button.clicked.connect(self.make_project)
-        self.invoice_button.clicked.connect(self.write_fillable_pdf)
+        self.invoice_button.clicked.connect(self.write_custom_pdf)
         self.treeView.doubleClicked.connect(self.open_file)
         self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
@@ -45,13 +45,13 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         raw_filename = self.treeView.fileModel.fileName(index)
         file_name = raw_filename[:-4]
         try:
-            if status_query(file_name) == 'Draft':
+            if database.status_query(file_name) == 'Draft':
                 self.progressBar.renew("Draft", 25)
-            if status_query(file_name) == 'Dispatched':
+            if database.status_query(file_name) == 'Dispatched':
                 self.progressBar.renew("Dispatched", 50)
-            if status_query(file_name) == 'Overdue':
+            if database.status_query(file_name) == 'Overdue':
                 self.progressBar.renew("Overdue", 75)
-            if status_query(file_name) == 'Paid':
+            if database.status_query(file_name) == 'Paid':
                 self.progressBar.renew("Paid", 100)
         except TypeError:
             return
@@ -65,7 +65,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """ Send the selected file to the recycle bin/delete database entry."""
         cur_path = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
         send2trash.send2trash(os.path.abspath(cur_path))
-        delete_entry(cur_path[36:-4])
+        database.delete_entry(cur_path[36:-4])
 
     def move_to_archive(self, index):
         """Move selected file to archive"""
@@ -108,11 +108,11 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             if action == menu.archive:
                 self.move_to_archive(index)
             if action == menu.dispatched:
-                update2dispatched(file_name)
+                database.update2dispatched(file_name)
             if action == menu.paid:
-                update2paid(file_name)
+                database.update2paid(file_name)
             if action == menu.overdue:
-                update2overdue(file_name)
+                database.update2overdue(file_name)
         except PermissionError:
             return
 

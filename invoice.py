@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from components.form import Form
 from workenv import create_workdir
 import database
 import os
@@ -13,10 +14,16 @@ WIDGET_SUBTYPE_KEY = '/Widget'
 
 
 class Invoice(QInputDialog):
+    """Create an invoice from a pdf template and populate it based on user
+     input."""
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.work_dir = create_workdir()
+        self.template_path = 'invoice_template.pdf'
+        self.dialog = Form()
+        input_1 = self.dialog.get_input_1()
         self.data_dict = {
-            'business_name_1': 'Bostata',
+            'business_name_1': f"{input_1}",
             'customer_name': 'company.io',
             'customer_email': 'joe@company.io',
             'invoice_number': '102394',
@@ -35,42 +42,52 @@ class Invoice(QInputDialog):
             'business_email_address': 'hi@bostata.com',
             'business_phone_number': '(617) 930-4294'
         }
+        new_pdf = self.process_pdf(self.template_path)
+        self.dialog.accepted.connect(lambda: self.produce_invoice(self.output_path, new_pdf))
 
-    def write_fillable_pdf(self):
-        work_dir = create_workdir()
+    def write_custom_pdf(self):
+        """Create an invoice based on a pdf template."""
         user_input = QInputDialog()
-        invoice_template_path = 'invoice_template.pdf'
         active = True
         while active:
             text, ok = user_input.getText(self, "Invoice name",
                                           "Please enter a name for the invoice          ")
             if ok and text != '':
                 self.name = text
-                invoice_output_path = f"{work_dir}" + "\\" + f"{self.name}" + ".pdf"
-                template_pdf = pdfrw.PdfReader(invoice_template_path)
-                template_pdf.Root.AcroForm.update(
-                    pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
-                annotations = template_pdf.pages[0][ANNOT_KEY]
-                for annotation in annotations:
-                    if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
-                        if annotation[ANNOT_FIELD_KEY]:
-                            key = annotation[ANNOT_FIELD_KEY][1:-1]
-                            if key in self.data_dict.keys():
-                                annotation.update(
-                                    pdfrw.PdfDict(
-                                        V='{}'.format(self.data_dict[key]))
-                                )
-                if not os.path.exists(invoice_output_path):
-                    pdfrw.PdfWriter().write(invoice_output_path, template_pdf)
-                    database.set_initstatus(self.name)
+                self.output_path = f"{self.work_dir}" + "\\" + \
+                                      f"{self.name}" + ".pdf"
+                if not os.path.exists(self.output_path):
+                    self.open_dialog()
+                    # database.set_initstatus(self.name)
                     active = False
                 else:
                     self.show_popup()
             else:
                 active = False
 
+    def open_dialog(self):
+        self.dialog.exec_()
+
+    def process_pdf(self, template_path):
+        template_pdf = pdfrw.PdfReader(template_path)
+        template_pdf.Root.AcroForm.update(
+            pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
+        annotations = template_pdf.pages[0][ANNOT_KEY]
+        for annotation in annotations:
+            if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+                if annotation[ANNOT_FIELD_KEY]:
+                    key = annotation[ANNOT_FIELD_KEY][1:-1]
+                    if key in self.data_dict.keys():
+                        annotation.update(pdfrw.PdfDict(
+                            V=f"{self.data_dict[key]}"))
+        return template_pdf
+
+    def produce_invoice(self, output_path, new_pdf):
+        new_invoice = pdfrw.PdfWriter().write(output_path, new_pdf)
+        return new_invoice
+
     def show_popup(self):
-        """Show a popup message if invoice name already exists"""
+        """Show a pop-up message if invoice name already exists"""
         msg = QMessageBox()
         msg.setWindowTitle("File/folder already exists.")
         msg.setText("The invoice or project you are trying to create "

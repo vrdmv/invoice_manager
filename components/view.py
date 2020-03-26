@@ -14,7 +14,7 @@ class TreeView(QtWidgets.QTreeView):
         self.setAcceptDrops(True)
         self.setDropIndicatorShown(True)
         self.setSortingEnabled(True)
-        self.setGeometry(QtCore.QRect(270, 90, 801, 571))
+        self.setGeometry(QtCore.QRect(270, 90, 815, 571))
         self.setObjectName("treeView")
         self.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
         self.setDefaultDropAction(Qt.MoveAction)
@@ -29,7 +29,7 @@ class TreeView(QtWidgets.QTreeView):
 class ListView(QtWidgets.QListView):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setGeometry(QtCore.QRect(10, 190, 221, 471))
+        self.setGeometry(QtCore.QRect(30, 190, 221, 471))
         self.setAlternatingRowColors(True)
         self.setAcceptDrops(True)
         self.setDropIndicatorShown(True)

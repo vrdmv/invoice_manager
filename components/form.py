@@ -9,23 +9,6 @@ class Form(QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.create_form()
-        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok |
-                                           QDialogButtonBox.Cancel, self)
-        self.button_box.accepted.connect(self.accept)
-        self.button_box.rejected.connect(self.reject)
-
-        main_layout = QVBoxLayout()
-        main_layout.addWidget(self.formbox)
-        main_layout.addWidget(self.button_box)
-
-        self.setLayout(main_layout)
-        self.setWindowTitle("Invoice data input")
-
-    def create_form(self):
-        """Show a pop-up form for the user to input invoice data."""
-        self.formbox = QGroupBox("Please provide invoice data below: ")
-
         self.input_1 = QLineEdit(self)
         self.input_2 = QLineEdit(self)
         self.input_3 = QLineEdit(self)
@@ -43,29 +26,43 @@ class Form(QDialog):
         self.input_15 = QLineEdit(self)
         self.input_16 = QLineEdit(self)
         self.input_17 = QLineEdit(self)
+        self.input_18 = QLineEdit(self)
 
+        self.button_box = QDialogButtonBox(QDialogButtonBox.Ok |
+                                           QDialogButtonBox.Cancel, self)
+        self.button_box.accepted.connect(self.accept)
+        self.button_box.rejected.connect(self.reject)
+
+        self.formbox = QGroupBox("Please provide invoice data below: ")
         layout = QFormLayout()
         layout.addRow(QLabel("Business name: "), self.input_1)
         layout.addRow(QLabel("Customer name: "), self.input_2)
         layout.addRow(QLabel("Customer email: "), self.input_3)
-        layout.addRow(QLabel("Sent date: "), self.input_4)
-        layout.addRow(QLabel("Due date: "), self.input_5)
-        layout.addRow(QLabel("Note: "), self.input_6)
-        layout.addRow(QLabel("Item 1: "), self.input_7)
-        layout.addRow(QLabel("Item 1 Quantity: "), self.input_8)
-        layout.addRow(QLabel("Item 1 Price: "), self.input_9)
-        layout.addRow(QLabel("Item 1 Amount: "), self.input_10)
-        layout.addRow(QLabel("Subtotal: "), self.input_11)
-        layout.addRow(QLabel("Tax: "), self.input_12)
-        layout.addRow(QLabel("Discounts: "), self.input_13)
-        layout.addRow(QLabel("Total: "), self.input_14)
-        layout.addRow(QLabel("Business name repeat: "), self.input_15)
-        layout.addRow(QLabel("Business email: "), self.input_16)
-        layout.addRow(QLabel("Business phone: "), self.input_17)
+        layout.addRow(QLabel("Invoice number: "), self.input_4)
+        layout.addRow(QLabel("Sent date: "), self.input_5)
+        layout.addRow(QLabel("Due date: "), self.input_6)
+        layout.addRow(QLabel("Note: "), self.input_7)
+        layout.addRow(QLabel("Item 1: "), self.input_8)
+        layout.addRow(QLabel("Item 1 Quantity: "), self.input_9)
+        layout.addRow(QLabel("Item 1 Price: "), self.input_10)
+        layout.addRow(QLabel("Item 1 Amount: "), self.input_11)
+        layout.addRow(QLabel("Subtotal: "), self.input_12)
+        layout.addRow(QLabel("Tax: "), self.input_13)
+        layout.addRow(QLabel("Discounts: "), self.input_14)
+        layout.addRow(QLabel("Total: "), self.input_15)
+        layout.addRow(QLabel("Business name repeat: "), self.input_16)
+        layout.addRow(QLabel("Business email: "), self.input_17)
+        layout.addRow(QLabel("Business phone: "), self.input_18)
         self.formbox.setLayout(layout)
 
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(self.formbox)
+        main_layout.addWidget(self.button_box)
+        self.setLayout(main_layout)
+        self.setWindowTitle("Invoice data input")
+
     def get_input_1(self):
-        storeString(self.input_1.text())
+        return self.input_1.text()
 
     def get_input_2(self):
         return self.input_2.text()
@@ -114,3 +111,6 @@ class Form(QDialog):
 
     def get_input_17(self):
         return self.input_17.text()
+
+    def get_input_18(self):
+        return self.input_18.text()

@@ -5,4 +5,4 @@ def storeString(inString):
     x = inString
     # Do something with the string
     print(inString)
-    return
+    return x

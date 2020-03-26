@@ -5,6 +5,7 @@ import database
 import os
 import pdfrw
 
+
 ANNOT_KEY = '/Annots'
 ANNOT_FIELD_KEY = '/T'
 ANNOT_VAL_KEY = '/V'
@@ -21,29 +22,26 @@ class Invoice(QInputDialog):
         self.work_dir = create_workdir()
         self.template_path = 'invoice_template.pdf'
         self.dialog = Form()
-        input_1 = self.dialog.get_input_1()
         self.data_dict = {
-            'business_name_1': f"{input_1}",
-            'customer_name': 'company.io',
-            'customer_email': 'joe@company.io',
-            'invoice_number': '102394',
-            'send_date': '2018-02-13',
-            'due_date': '2018-03-13',
-            'note_contents': 'Thank you for your business, Joe',
-            'item_1': 'Data consulting services',
-            'item_1_quantity': '10 hours',
-            'item_1_price': '$200/hr',
-            'item_1_amount': '$2000',
-            'subtotal': '$2000',
-            'tax': '0',
-            'discounts': '0',
-            'total': '$2000',
-            'business_name_2': 'Bostata LLC',
-            'business_email_address': 'hi@bostata.com',
-            'business_phone_number': '(617) 930-4294'
+            'business_name_1': '',
+            'customer_name': '',
+            'customer_email': '',
+            'invoice_number': '',
+            'send_date': '',
+            'due_date': '',
+            'note_contents': '',
+            'item_1': '',
+            'item_1_quantity': '',
+            'item_1_price': '',
+            'item_1_amount': '',
+            'subtotal': '',
+            'tax': '',
+            'discounts': '',
+            'total': '',
+            'business_name_2': '',
+            'business_email_address': '',
+            'business_phone_number': ''
         }
-        new_pdf = self.process_pdf(self.template_path)
-        self.dialog.accepted.connect(lambda: self.produce_invoice(self.output_path, new_pdf))
 
     def write_custom_pdf(self):
         """Create an invoice based on a pdf template."""
@@ -58,7 +56,7 @@ class Invoice(QInputDialog):
                                       f"{self.name}" + ".pdf"
                 if not os.path.exists(self.output_path):
                     self.open_dialog()
-                    # database.set_initstatus(self.name)
+                    database.set_initstatus(self.name)
                     active = False
                 else:
                     self.show_popup()
@@ -66,7 +64,28 @@ class Invoice(QInputDialog):
                 active = False
 
     def open_dialog(self):
-        self.dialog.exec_()
+        if self.dialog.exec_():
+            self.data_dict['business_name_1'] = self.dialog.get_input_1()
+            self.data_dict['customer_name'] = self.dialog.get_input_2()
+            self.data_dict['customer_email'] = self.dialog.get_input_3()
+            self.data_dict['invoice_number'] = self.dialog.get_input_4()
+            self.data_dict['send_date'] = self.dialog.get_input_5()
+            self.data_dict['due_date'] = self.dialog.get_input_6()
+            self.data_dict['note_contents'] = self.dialog.get_input_7()
+            self.data_dict['item_1'] = self.dialog.get_input_8()
+            self.data_dict['item_1_quantity'] = self.dialog.get_input_9()
+            self.data_dict['item_1_price'] = self.dialog.get_input_10()
+            self.data_dict['item_1_amount'] = self.dialog.get_input_11()
+            self.data_dict['subtotal'] = self.dialog.get_input_12()
+            self.data_dict['tax'] = self.dialog.get_input_13()
+            self.data_dict['discounts'] = self.dialog.get_input_14()
+            self.data_dict['total'] = self.dialog.get_input_15()
+            self.data_dict['business_name_2'] = self.dialog.get_input_16()
+            self.data_dict['business_email_address'] = self.dialog.get_input_17()
+            self.data_dict['business_phone_number'] = self.dialog.get_input_18()
+            new_pdf = self.process_pdf(self.template_path)
+            self.produce_invoice(self.output_path, new_pdf)
+
 
     def process_pdf(self, template_path):
         template_pdf = pdfrw.PdfReader(template_path)

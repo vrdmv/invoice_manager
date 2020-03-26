@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtWidgets
 class ProgressBar(QtWidgets.QProgressBar):
     def __init__(self, parent=None, total=100):
         super().__init__(parent)
-        self.setGeometry(QtCore.QRect(270, 670, 801, 23))
+        self.setGeometry(QtCore.QRect(270, 670, 815, 23))
         self.setToolTip("Invoice status")
         self.setAutoFillBackground(False)
         self.setStyleSheet("")

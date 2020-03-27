@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-from components.stringStorage import storeString
 
 
 class Form(QDialog):
@@ -59,6 +58,7 @@ class Form(QDialog):
         main_layout.addWidget(self.formbox)
         main_layout.addWidget(self.button_box)
         self.setLayout(main_layout)
+        self.setMinimumWidth(400)
         self.setWindowTitle("Invoice data input")
 
     def get_input_1(self):

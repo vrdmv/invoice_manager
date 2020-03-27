@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtGui import QPainter, QFont
 from PyQt5.QtCore import Qt
-import database
+from components import database
 
 
 class Visual(QtWidgets.QWidget):

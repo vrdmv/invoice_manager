@@ -7,6 +7,7 @@ class MainTab(QtWidgets.QTabWidget):
         super().__init__(parent)
         self.setGeometry(QtCore.QRect(0, 0, 1120, 750))
         self.main_tab = QtWidgets.QWidget()
+        self.main_tab.showFullScreen()
         self.addTab(self.main_tab, "")
         self.visual_tab = Visual()
         self.addTab(self.visual_tab, "")

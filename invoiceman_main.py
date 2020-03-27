@@ -3,8 +3,8 @@ from components.palette import dark_palette
 from components.contextmenu import ContextMenu
 from components.view import *
 from invoice import Invoice
-from workenv import *
-import database
+from components.workenv import *
+from components import database
 import sys
 import shutil
 import send2trash

@@ -20,6 +20,7 @@ class UiMainWindow(object):
         self.status_label = Label((205, 550, 800, 263), self.tabwidget.main_tab)
         self.progressBar = ProgressBar(self.tabwidget.main_tab)
 
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.retranslateUi(MainWindow)
         self.tabwidget.setCurrentIndex(0)

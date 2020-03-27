@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from components.form import Form
-from workenv import create_workdir
-import database
+from components.workenv import create_workdir
+from components import database
 import os
 import pdfrw
 

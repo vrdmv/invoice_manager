@@ -88,18 +88,23 @@ class Invoice(QInputDialog):
 
 
     def process_pdf(self, template_path):
-        template_pdf = pdfrw.PdfReader(template_path)
-        template_pdf.Root.AcroForm.update(
-            pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
-        annotations = template_pdf.pages[0][ANNOT_KEY]
-        for annotation in annotations:
-            if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
-                if annotation[ANNOT_FIELD_KEY]:
-                    key = annotation[ANNOT_FIELD_KEY][1:-1]
-                    if key in self.data_dict.keys():
-                        annotation.update(pdfrw.PdfDict(
-                            V=f"{self.data_dict[key]}"))
-        return template_pdf
+        try:
+            template_pdf = pdfrw.PdfReader(template_path)
+            template_pdf.Root.AcroForm.update(
+                pdfrw.PdfDict(NeedAppearances=pdfrw.PdfObject('true')))
+            annotations = template_pdf.pages[0][ANNOT_KEY]
+            for annotation in annotations:
+                if annotation[SUBTYPE_KEY] == WIDGET_SUBTYPE_KEY:
+                    if annotation[ANNOT_FIELD_KEY]:
+                        key = annotation[ANNOT_FIELD_KEY][1:-1]
+                        if key in self.data_dict.keys():
+                            annotation.update(pdfrw.PdfDict(
+                                V=f"{self.data_dict[key]}"))
+            return template_pdf
+        except pdfrw.PdfParseError:
+            self.show_popup_2()
+
+
 
     def produce_invoice(self, output_path, new_pdf):
         new_invoice = pdfrw.PdfWriter().write(output_path, new_pdf)
@@ -112,5 +117,15 @@ class Invoice(QInputDialog):
         msg.setText("The invoice or project you are trying to create "
                     "already exists."
                     " Please specify another name.")
+        msg.setIcon(QMessageBox.Warning)
+        x = msg.exec_()
+
+    def show_popup_2(self):
+        """Show a pop-up message if invoice name already exists"""
+        msg = QMessageBox()
+        msg.setWindowTitle("Missing template.")
+        msg.setText("The invoice template is missing."
+                    "Please add the invoice template to the same directory as"
+                    "the .exe file.")
         msg.setIcon(QMessageBox.Warning)
         x = msg.exec_()

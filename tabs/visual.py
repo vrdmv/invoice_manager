@@ -6,15 +6,11 @@ from components import database
 
 
 class Visual(QtWidgets.QWidget):
+    """A class to visualize and summarize the status of all invoices"""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.layout = QtWidgets.QHBoxLayout()
         self.setLayout(self.layout)
-        # self.i = 0
-        #  self.timer = QTimer()
-        # self.timer.setInterval(3000)
-        # self.timer.timeout.connect(self.update_piechart)
-        # self.timer.start()
         self.series = QPieSeries()
         self.pie_slice = QPieSlice()
         self.chart = QChart()
@@ -22,17 +18,18 @@ class Visual(QtWidgets.QWidget):
         self.create_piechart()
 
     def update_piechart(self):
-        # self.i += 1
+        """Update pie chart with most recent status summary """
         self.series.clear()
-        self.num_disp = database.get_dispatched()
-        self.num_ovrd = database.get_overdue()
+        self.num_dispatched = database.get_dispatched()
+        self.num_overdue = database.get_overdue()
         self.num_paid = database.get_paid()
-        self.series.append("Dispatched", self.num_disp)
-        self.series.append("Overdue", self.num_ovrd)
+        self.series.append("Dispatched", self.num_dispatched)
+        self.series.append("Overdue", self.num_overdue)
         self.series.append("Paid", self.num_paid)
 
     def create_piechart(self):
-        """Create a pie chart that lays out all of the invoices' current status"""
+        """Create a pie chart that lays out all of the invoices'
+        current status"""
         self.chart.addSeries(self.series)
         self.chart.createDefaultAxes()
         self.chart.setAnimationOptions(QChart.SeriesAnimations)

@@ -15,7 +15,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
     """The Logic class contains all of the program's functions"""
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        self.setup_ui(self)
         self.listView = ListView(self.tabwidget.main_tab)
         self.treeView = TreeView(self.tabwidget.main_tab)
         self.treeView.setColumnHidden(1, True)
@@ -108,11 +108,11 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             if action == menu.archive:
                 self.move_to_archive(index)
             if action == menu.dispatched:
-                database.update2dispatched(file_name)
+                database.update_status(file_name, "Dispatched")
             if action == menu.paid:
-                database.update2paid(file_name)
+                database.update_status(file_name, "Paid")
             if action == menu.overdue:
-                database.update2overdue(file_name)
+                database.update_status(file_name, "Overdue")
         except PermissionError:
             return
 

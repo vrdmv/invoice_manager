@@ -64,6 +64,7 @@ class Invoice(QInputDialog):
                 active = False
 
     def open_dialog(self):
+        """Populate the pdf template with user input"""
         if self.dialog.exec_():
             self.data_dict['business_name_1'] = self.dialog.get_input_1()
             self.data_dict['customer_name'] = self.dialog.get_input_2()
@@ -86,8 +87,8 @@ class Invoice(QInputDialog):
             new_pdf = self.process_pdf(self.template_path)
             self.produce_invoice(self.output_path, new_pdf)
 
-
     def process_pdf(self, template_path):
+        """Access the pdf fields"""
         try:
             template_pdf = pdfrw.PdfReader(template_path)
             template_pdf.Root.AcroForm.update(
@@ -104,9 +105,8 @@ class Invoice(QInputDialog):
         except pdfrw.PdfParseError:
             self.show_popup_2()
 
-
-
     def produce_invoice(self, output_path, new_pdf):
+        """Make a new invoice pdf document, populated with the user's input"""
         new_invoice = pdfrw.PdfWriter().write(output_path, new_pdf)
         return new_invoice
 

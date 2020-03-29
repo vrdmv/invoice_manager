@@ -2,6 +2,7 @@ import pymongo.errors
 from pymongo import MongoClient
 from PyQt5.QtWidgets import QMessageBox
 
+
 def show_popup():
     """Show a pop-up message if invoice name already exists"""
     msg = QMessageBox()
@@ -10,12 +11,14 @@ def show_popup():
     msg.setIcon(QMessageBox.Warning)
     x = msg.exec_()
 
+
 try:
     cluster = MongoClient("mongodb+srv://dimovik:10307060@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
     database = cluster["invoiceman"]
     collection = database["invoice_status"]
 except pymongo.errors.ConfigurationError:
     print("No access to database!")
+
 
 def set_initstatus(name):
     """Set the invoice's status"""
@@ -36,29 +39,11 @@ def status_query(name):
         show_popup()
 
 
-def update2dispatched(name):
+def update_status(name, status):
     """Update the invoice's status"""
     try:
         collection.update_one({"invoice_name": f"{name}"},
-                              {"$set": {"status": "Dispatched"}})
-    except NameError:
-        show_popup()
-
-
-def update2paid(name):
-    """Update the invoice's status"""
-    try:
-        collection.update_one({"invoice_name": f"{name}"},
-                              {"$set": {"status": "Paid"}})
-    except NameError:
-        show_popup()
-
-
-def update2overdue(name):
-    """Update the invoice's status"""
-    try:
-        collection.update_one({"invoice_name": f"{name}"},
-                              {"$set": {"status": "Overdue"}})
+                              {"$set": {"status": f"{status}"}})
     except NameError:
         show_popup()
 

@@ -109,10 +109,13 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                 self.move_to_archive(index)
             if action == menu.dispatched:
                 database.update_status(file_name, "Dispatched")
+                self.check_status(index)
             if action == menu.paid:
                 database.update_status(file_name, "Paid")
+                self.check_status(index)
             if action == menu.overdue:
                 database.update_status(file_name, "Overdue")
+                self.check_status(index)
         except PermissionError:
             return
 
@@ -134,7 +137,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                     self.show_popup()
             else:
                 active = False
-
+                
 
 create_workdir()
 create_archive()

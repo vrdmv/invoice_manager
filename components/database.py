@@ -56,40 +56,18 @@ def delete_entry(name):
         show_popup()
 
 
-def get_dispatched():
+def get_current_status():
     """Checks the status of all invoices."""
-    dispatched = []
+    dispatched, overdue, paid = [], [], []
     try:
         results = collection.find({})
         for result in results:
             if result['status'] == "Dispatched":
                 dispatched.append(result['status'])
-        return len(dispatched)
-    except NameError:
-        show_popup()
-
-
-def get_overdue():
-    """Checks the status of all invoices."""
-    overdue = []
-    try:
-        results = collection.find({})
-        for result in results:
             if result['status'] == "Overdue":
                 overdue.append(result['status'])
-        return len(overdue)
-    except NameError:
-        show_popup()
-
-
-def get_paid():
-    """Checks the status of all invoices."""
-    paid = []
-    try:
-        results = collection.find({})
-        for result in results:
             if result['status'] == "Paid":
-                paid.append(result["status"])
-        return len(paid)
+                paid.append(result['status'])
+        return len(dispatched), len(overdue), len(paid)
     except NameError:
         show_popup()

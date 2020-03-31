@@ -2,7 +2,9 @@ from currency_converter import CurrencyConverter
 from components.tablewidget import TableWidget
 from components.label import Label
 from components.button import Button
+from components.database import get_total
 from components.misc import *
+
 
 
 c = CurrencyConverter('http://www.ecb.int/stats/eurofxref/eurofxref-hist.zip')
@@ -22,26 +24,27 @@ class Exchange(QtWidgets.QWidget):
         self.frame_2 = Frame((105, 90, 881, 48), QtWidgets.QFrame.StyledPanel,
                              QtWidgets.QFrame.Raised, self.frame_1)
         self.lay_2 = QtWidgets.QHBoxLayout(self.frame_2)
-        self.label = Label((30, 30, 71, 21), "Convert", self.frame_2)
+        self.label = Label((30, 30, 71, 21), "Convert", 11, self.frame_2)
         self.lay_2.addWidget(self.label)
         self.line = LineEdit((120, 30, 121, 21), self.frame_2)
         self.lay_2.addWidget(self.line)
-        self.label_2 = Label((270, 30, 21, 21), "of", self.frame_2)
+        self.label_2 = Label((270, 30, 21, 21), "of", 11, self.frame_2)
         self.lay_2.addWidget(self.label_2)
         self.combo = ComboBox((420, 30, 21, 21), self.frame_2)
         self.combo.addItems(currencies)
         self.lay_2.addWidget(self.combo)
-        self.label_3 = Label((270, 30, 21, 21), "to", self.frame_2)
+        self.label_3 = Label((270, 30, 21, 21), "to", 11, self.frame_2)
         self.lay_2.addWidget(self.label_3)
         self.combo_2 = ComboBox((460, 30, 81, 21), self.frame_2)
         self.combo_2.addItems(currencies)
         self.lay_2.addWidget(self.combo_2)
-        self.label_4 = Label((570, 30, 171, 21), "with exchange rate of",
+        self.label_4 = Label((570, 30, 171, 21), "with exchange rate of", 11,
                              self.frame_2)
         self.lay_2.addWidget(self.label_4)
         self.date_edit = DateEdit((300, 30, 121, 21), self.frame_2)
         self.lay_2.addWidget(self.date_edit)
-        self.label_5 = Label((300, 30, 121, 21), "(dd-mm-yyyy)", self.frame_2)
+        self.label_5 = Label((300, 30, 121, 21), "(dd-mm-yyyy)", 11,
+                             self.frame_2)
         self.lay_2.addWidget(self.label_5)
         self.convert_button = Button((105, 185, 151, 41), "Convert amounts",
                                      "Enter", "Shortcut: 'Enter'", self.frame_1)
@@ -62,11 +65,25 @@ class Exchange(QtWidgets.QWidget):
         item_5.setText("Exchange rate")
 
         self.lay_3.addWidget(self.tablewidget)
-        self.label_6 = Label((460, 20, 221, 41), "- Currency converter -",
+        self.label_6 = Label((450, 25, 221, 41), "- Currency converter -", 11,
                              self.frame_1)
         self.combo.setCurrentIndex(currencies.index('EUR'))
         self.combo_2.setCurrentIndex(currencies.index('USD'))
         self.convert_button.clicked.connect(self.process_input)
+
+        self.label_7 = Label((450, 290, 221, 41), "- Cashflow summary -", 11,
+                             self.frame_1)
+
+        self.label_8 = Label((515, 550, 41, 41), "Paid", 9, self.frame_1)
+        self.label_9 = Label((150, 550, 61, 41), "Pending", 9, self.frame_1)
+        self.label_10 = Label((880, 550, 61, 41), "Overdue", 9, self.frame_1)
+
+        self.label_11 = Label((40, 430, 271, 71), "€0", 40, self.frame_1)
+        self.label_11.setAlignment(QtCore.Qt.AlignHCenter)
+        self.label_12 = Label((390, 430, 271, 71), "€0", 40, self.frame_1)
+        self.label_12.setAlignment(QtCore.Qt.AlignHCenter)
+        self.label_13 = Label((770, 430, 271, 71), "€0", 40, self.frame_1)
+        self.label_13.setAlignment(QtCore.Qt.AlignHCenter)
 
     def process_input(self):
         self.text = self.line.text()
@@ -86,3 +103,16 @@ class Exchange(QtWidgets.QWidget):
         self.tablewidget.setItem(0, 2, QtWidgets.QTableWidgetItem(f"{self.result}" +
                                                                   " " +
                                                                   f"{self.item_2}"))
+
+
+    def update_cashflow_labels(self):
+        self.label_11.clear()
+        self.label_12.clear()
+        self.label_13.clear()
+        pending, overdue, paid = get_total()
+        pending_str = "€" + f"{pending}"
+        self.label_11.setText(pending_str)
+        overdue_str = "€" + f"{overdue}"
+        self.label_13.setText(overdue_str)
+        paid_str = "€" + f"{paid}"
+        self.label_12.setText(paid_str)

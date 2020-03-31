@@ -56,7 +56,7 @@ class Invoice(QInputDialog):
                                       f"{self.name}" + ".pdf"
                 if not os.path.exists(self.output_path):
                     self.open_dialog()
-                    database.set_initstatus(self.name)
+                    database.set_initstatus(self.name, self.data_dict['total'])
                     active = False
                 else:
                     self.show_popup()
@@ -88,7 +88,7 @@ class Invoice(QInputDialog):
             self.produce_invoice(self.output_path, new_pdf)
 
     def process_pdf(self, template_path):
-        """Access the pdf fields"""
+        """Access the pdf fields."""
         try:
             template_pdf = pdfrw.PdfReader(template_path)
             template_pdf.Root.AcroForm.update(

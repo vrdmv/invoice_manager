@@ -23,11 +23,11 @@ class UiMainWindow(object):
         self.invoice_button = Button((30, 20, 121, 41), "+ New Invoice",
                                      "Ctrl+N", "Shortcut: Ctrl+N",
                                      self.tabwidget.main_tab)
-        self.project_label = Label((90, 155, 95, 21), "- Projects -",
+        self.project_label = Label((90, 155, 95, 21), "- Projects -", 11,
                                    self.tabwidget.main_tab)
-        self.invoice_label = Label((600, 50, 95, 21), "- Invoices -",
+        self.invoice_label = Label((600, 50, 95, 21), "- Invoices -", 11,
                                    self.tabwidget.main_tab)
-        self.status_label = Label((205, 550, 800, 263), "Status: ",
+        self.status_label = Label((205, 550, 800, 263), "Status: ", 11,
                                   self.tabwidget.main_tab)
         self.progressBar = ProgressBar(self.tabwidget.main_tab)
 

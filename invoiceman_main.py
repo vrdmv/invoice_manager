@@ -26,7 +26,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         self.treeView.clicked.connect(self.check_status)
         self.treeView.customContextMenuRequested.connect(self.open_menu)
         self.listView.clicked.connect(self.show_files)
-        self.tabwidget.currentChanged.connect(self.refresh_tab)
+        self.tabwidget.currentChanged.connect(self.refresh_visual_tab)
+        self.tabwidget.currentChanged.connect(self.refresh_exchange_tab)
 
     # Program Functions
     def show_files(self, index):
@@ -56,10 +57,15 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         except TypeError:
             return
 
-    def refresh_tab(self):
+    def refresh_visual_tab(self):
         index = self.tabwidget.currentIndex()
         if index == 1:
             self.tabwidget.visual_tab.update_piechart()
+
+    def refresh_exchange_tab(self):
+        index = self.tabwidget.currentIndex()
+        if index == 2:
+            self.tabwidget.exch_tab.update_cashflow_labels()
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin/delete database entry."""
@@ -137,7 +143,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                     self.show_popup()
             else:
                 active = False
-                
+
 
 create_workdir()
 create_archive()

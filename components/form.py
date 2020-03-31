@@ -1,10 +1,6 @@
 from PyQt5.QtWidgets import *
 
 
-# Create input class, pass form and label
-# getter property to get self.input.text
-# pass key to input class and
-
 class Form(QDialog):
     """Show a pop-up form for the user to input invoice data."""
     NumGridRows = 3
@@ -118,3 +114,4 @@ class Form(QDialog):
 
     def get_input_18(self):
         return self.input_18.text()
+

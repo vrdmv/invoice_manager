@@ -20,10 +20,11 @@ except pymongo.errors.ConfigurationError:
     print("No access to database!")
 
 
-def set_initstatus(name):
+def set_initstatus(name, total):
     """Set the invoice's status"""
     try:
-        post = {"invoice_name": f"{name}", "status": "Draft"}
+        post = {"invoice_name": f"{name}", "status": "Draft",
+                "total": total}
         collection.insert_one(post)
     except NameError:
         show_popup()
@@ -71,3 +72,22 @@ def get_current_status():
         return len(dispatched), len(overdue), len(paid)
     except NameError:
         show_popup()
+
+def get_total():
+    """Checks the status of all invoices."""
+    pending, overdue, paid = [], [], []
+    try:
+        results = collection.find({})
+        for result in results:
+            if result['status'] == "Dispatched":
+                pending.append(int(result['total']))
+            if result['status'] == "Overdue":
+                overdue.append(int(result['total']))
+            if result['status'] == "Paid":
+                paid.append(int(result['total']))
+        return sum(pending), sum(overdue), sum(paid)
+    except NameError:
+        show_popup()
+
+
+

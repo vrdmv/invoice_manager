@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 
-
+# To be refactored
 class Form(QDialog):
     """Show a pop-up form for the user to input invoice data."""
     NumGridRows = 3

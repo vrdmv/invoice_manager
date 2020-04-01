@@ -16,7 +16,7 @@ class UiMainWindow(object):
         self.tabwidget = MainTab(self.centralwidget)
         self.tabwidget.setTabText(0, "Main")
         self.tabwidget.setTabText(1, "Visual")
-        self.tabwidget.setTabText(2, "Exchange rates")
+        self.tabwidget.setTabText(2, "Finance")
         self.project_button = Button((30, 80, 121, 41), "+ New Project",
                                      "Ctrl+P", "Shortcut: Ctrl+P",
                                      self.tabwidget.main_tab)

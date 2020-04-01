@@ -73,6 +73,7 @@ def get_current_status():
     except NameError:
         show_popup()
 
+
 def get_total():
     """Checks the status of all invoices."""
     pending, overdue, paid = [], [], []

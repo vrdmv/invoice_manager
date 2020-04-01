@@ -2,7 +2,7 @@ from currency_converter import CurrencyConverter
 from components.tablewidget import TableWidget
 from components.label import Label
 from components.button import Button
-from components.database import get_total
+from components import database
 from components.misc import *
 
 
@@ -93,6 +93,7 @@ class Exchange(QtWidgets.QWidget):
         self.result_raw = c.convert(float(self.text), self.item_1, self.item_2,
                            date=self.date)
         self.result = round(self.result_raw, 2)
+        self.exchange_rate = round(self.result/int(self.text), 4)
         self.display_output()
 
     def display_output(self):
@@ -103,13 +104,19 @@ class Exchange(QtWidgets.QWidget):
         self.tablewidget.setItem(0, 2, QtWidgets.QTableWidgetItem(f"{self.result}" +
                                                                   " " +
                                                                   f"{self.item_2}"))
+        self.tablewidget.setItem(0, 3,
+                                 QtWidgets.QTableWidgetItem("1 " + f"{self.item_1}" +
+                                                            " = " +
+                                                            f"{self.exchange_rate}" +
+                                                            " " +
+                                                            f"{self.item_2}"))
 
 
     def update_cashflow_labels(self):
         self.label_11.clear()
         self.label_12.clear()
         self.label_13.clear()
-        pending, overdue, paid = get_total()
+        pending, overdue, paid = database.get_total()
         pending_str = "€" + f"{pending}"
         self.label_11.setText(pending_str)
         overdue_str = "€" + f"{overdue}"

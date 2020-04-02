@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-from components.input import *
 
 
 class Form(QDialog):

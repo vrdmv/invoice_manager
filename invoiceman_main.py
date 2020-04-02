@@ -43,29 +43,18 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
 
     def check_status(self, index):
         """Check invoice status based on database entries."""
-        raw_filename = self.treeView.fileModel.fileName(index)
-        file_name = raw_filename[:-4]
+        file_name = self.treeView.fileModel.fileName(index)
         try:
-            if database.status_query(file_name) == 'Draft':
+            if database.status_query(file_name[:-4]) == 'Draft':
                 self.progressBar.renew("Draft", 25)
-            if database.status_query(file_name) == 'Dispatched':
+            if database.status_query(file_name[:-4]) == 'Dispatched':
                 self.progressBar.renew("Dispatched", 50)
-            if database.status_query(file_name) == 'Overdue':
+            if database.status_query(file_name[:-4]) == 'Overdue':
                 self.progressBar.renew("Overdue", 75)
-            if database.status_query(file_name) == 'Paid':
+            if database.status_query(file_name[:-4]) == 'Paid':
                 self.progressBar.renew("Paid", 100)
         except TypeError:
             return
-
-    def refresh_visual_tab(self):
-        index = self.tabwidget.currentIndex()
-        if index == 1:
-            self.tabwidget.visual_tab.update_piechart()
-
-    def refresh_exchange_tab(self):
-        index = self.tabwidget.currentIndex()
-        if index == 2:
-            self.tabwidget.exch_tab.update_cashflow_labels()
 
     def dlt(self, index):
         """ Send the selected file to the recycle bin/delete database entry."""
@@ -86,20 +75,17 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """Copy the selected file within the same directory."""
         source = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
         destination = self.listView.dirModel.fileInfo(index).absoluteFilePath()
-        dest_1half = destination[:-4]
-        dest_2half = destination[-4:]
         if not os.path.exists(destination):
             shutil.copy(os.path.abspath(source), os.path.abspath(destination))
         else:
-            new_dest = dest_1half + " - Copy" + dest_2half
+            new_dest = destination[:-4] + " - Copy" + destination[-4:]
             shutil.copy(os.path.abspath(source), os.path.abspath(new_dest))
 
     def open_menu(self, position):
         """Setup a context menu, containing various options, to open upon right
         click."""
         index = self.treeView.indexAt(position)
-        raw_filename = self.treeView.fileModel.fileName(index)
-        file_name = raw_filename[:-4]
+        file_name = self.treeView.fileModel.fileName(index)
         if not index.isValid():
             return
         menu = ContextMenu(self)
@@ -114,16 +100,26 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
             if action == menu.archive:
                 self.move_to_archive(index)
             if action == menu.dispatched:
-                database.update_status(file_name, "Dispatched")
+                database.update_status(file_name[:-4], "Dispatched")
                 self.check_status(index)
             if action == menu.paid:
-                database.update_status(file_name, "Paid")
+                database.update_status(file_name[:-4], "Paid")
                 self.check_status(index)
             if action == menu.overdue:
-                database.update_status(file_name, "Overdue")
+                database.update_status(file_name[:-4], "Overdue")
                 self.check_status(index)
         except PermissionError:
             return
+
+    def refresh_visual_tab(self):
+        index = self.tabwidget.currentIndex()
+        if index == 1:
+            self.tabwidget.visual_tab.update_piechart()
+
+    def refresh_exchange_tab(self):
+        index = self.tabwidget.currentIndex()
+        if index == 2:
+            self.tabwidget.exch_tab.update_cashflow_labels()
 
     def make_project(self):
         """Create a new project folder."""

@@ -1,6 +1,6 @@
-from components.progressbar import ProgressBar
-from components.label import Label
 from components.button import Button
+from components.label import Label
+from components.progressbar import ProgressBar
 from components.view import *
 from tabs.main_tab import MainTab
 

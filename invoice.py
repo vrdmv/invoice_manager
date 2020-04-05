@@ -1,9 +1,9 @@
+import os
+import pdfrw
 from PyQt5.QtWidgets import *
 from components.form import Form
 from components.workenv import create_workdir
 from components import database
-import os
-import pdfrw
 
 
 ANNOT_KEY = '/Annots'
@@ -52,8 +52,7 @@ class Invoice(QInputDialog):
                                           "Please enter a name for the invoice          ")
             if ok and text != '':
                 self.name = text
-                self.output_path = f"{self.work_dir}" + "\\" + \
-                                      f"{self.name}" + ".pdf"
+                self.output_path = f"{self.work_dir}\\{self.name}.pdf"
                 if not os.path.exists(self.output_path):
                     self.open_dialog()
                     database.set_initstatus(self.name, self.data_dict['total'])
@@ -82,8 +81,10 @@ class Invoice(QInputDialog):
             self.data_dict['discounts'] = self.dialog.input_list[13].text()
             self.data_dict['total'] = self.dialog.input_list[14].text()
             self.data_dict['business_name_2'] = self.dialog.input_list[15].text()
-            self.data_dict['business_email_address'] = self.dialog.input_list[16].text()
-            self.data_dict['business_phone_number'] = self.dialog.input_list[17].text()
+            self.data_dict['business_email_address'] = (
+                self.dialog.input_list[16].text())
+            self.data_dict['business_phone_number'] = (
+                self.dialog.input_list[17].text())
             new_pdf = self.process_pdf(self.template_path)
             self.produce_invoice(self.output_path, new_pdf)
 

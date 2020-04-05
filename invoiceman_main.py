@@ -1,14 +1,13 @@
-from invoiceman_gui import UiMainWindow
-from components.palette import dark_palette
-from components.contextmenu import ContextMenu
-from components.view import *
-from invoice import Invoice
-from components.workenv import *
-from components import database
 import sys
 import shutil
 import send2trash
-import os
+from components import database
+from components import workenv
+from components.contextmenu import ContextMenu
+from components.palette import dark_palette
+from components.view import *
+from invoice import Invoice
+from invoiceman_gui import UiMainWindow
 
 
 class Logic(QMainWindow, UiMainWindow, Invoice):
@@ -66,7 +65,7 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
         """Move selected file to archive"""
         try:
             source = self.treeView.fileModel.fileInfo(index).absoluteFilePath()
-            destination = create_archive()
+            destination = workenv.create_archive()
             shutil.move(os.path.abspath(source), os.path.abspath(destination))
         except shutil.Error:
             return
@@ -141,8 +140,8 @@ class Logic(QMainWindow, UiMainWindow, Invoice):
                 active = False
 
 
-create_workdir()
-create_archive()
+workenv.create_workdir()
+workenv.create_archive()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

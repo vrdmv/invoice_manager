@@ -13,7 +13,9 @@ def show_popup():
 
 
 try:
-    cluster = MongoClient("mongodb+srv://dimovik:10307060@thecluster-noqgm.gcp.mongodb.net/test?retryWrites=true&w=majority")
+    cluster = MongoClient(
+        "mongodb+srv://dimovik:10307060@thecluster-noqgm.gcp.mongodb.net"
+        "/test?retryWrites=true&w=majority")
     database = cluster["invoiceman"]
     collection = database["invoice_status"]
 except pymongo.errors.ConfigurationError:
@@ -80,11 +82,11 @@ def get_total():
     try:
         results = collection.find({})
         for result in results:
-            if result['status'] == "Dispatched":
+            if result['status'] == "Dispatched" and result['total']:
                 pending.append(int(result['total']))
-            if result['status'] == "Overdue":
+            if result['status'] == "Overdue" and result['total']:
                 overdue.append(int(result['total']))
-            if result['status'] == "Paid":
+            if result['status'] == "Paid" and result['total']:
                 paid.append(int(result['total']))
         return sum(pending), sum(overdue), sum(paid)
     except NameError:

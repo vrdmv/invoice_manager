@@ -20,10 +20,13 @@ class Visual(QtWidgets.QWidget):
     def update_piechart(self):
         """Update pie chart with most recent status summary """
         self.series.clear()
-        self.dispatched, self.overdue, self.paid = database.get_current_status()
-        self.series.append("Dispatched", self.dispatched)
-        self.series.append("Overdue", self.overdue)
-        self.series.append("Paid", self.paid)
+        try:
+            self.dispatched, self.overdue, self.paid = database.get_current_status()
+            self.series.append("Dispatched", self.dispatched)
+            self.series.append("Overdue", self.overdue)
+            self.series.append("Paid", self.paid)
+        except TypeError:
+            self.series.append("No current status", 100)
 
     def create_piechart(self):
         """Create a pie chart that lays out all of the invoices'

@@ -116,10 +116,16 @@ class Exchange(QtWidgets.QWidget):
         self.label_11.clear()
         self.label_12.clear()
         self.label_13.clear()
-        pending, overdue, paid = database.get_total()
-        pending_str = "€" + f"{pending}"
-        self.label_11.setText(pending_str)
-        overdue_str = "€" + f"{overdue}"
-        self.label_13.setText(overdue_str)
-        paid_str = "€" + f"{paid}"
-        self.label_12.setText(paid_str)
+        try:
+            pending, overdue, paid = database.get_total()
+            pending_str = "€" + f"{pending}"
+            self.label_11.setText(pending_str)
+            overdue_str = "€" + f"{overdue}"
+            self.label_13.setText(overdue_str)
+            paid_str = "€" + f"{paid}"
+            self.label_12.setText(paid_str)
+        except TypeError:
+            self.label_11.setText("€0")
+            self.label_12.setText("€0")
+            self.label_13.setText("€0")
+            return self.label_11, self.label_12, self.label_13

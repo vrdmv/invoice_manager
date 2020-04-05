@@ -10,4 +10,7 @@
   Lastly, the program allows for the user to:
     - move, copy, archive and delete invoice files; 
     - create project folders so they can properly organize their work.
-  To use the program, the user has to download the invoiceman.exe file and invoice_template.pdf contained in the executable folder above. Please note that in order for the program to run properly, the user has to make sure that "invoice_template.pdf" remains with the same name and is stored in the same directory as the .exe file. The program is currently compatible with Windows only. 
+  To use the program, the user has to download the invoiceman.exe file and invoice_template.pdf contained in the executable folder above.
+  Please note that in order for the program to run properly, the user has to make sure that "invoice_template.pdf" remains with the same
+  name and is stored in the same directory as the .exe file. 
+  The program is currently compatible with Windows only. 
